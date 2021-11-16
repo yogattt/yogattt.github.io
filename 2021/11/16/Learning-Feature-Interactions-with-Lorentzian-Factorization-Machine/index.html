@@ -20,19 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="摘要&amp;emsp; &amp;emsp; 学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互。但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。&amp;emsp; &amp;emsp;作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2021/11/15/hello-world/index.html">
+<meta property="og:title" content="Learning Feature Interactions with Lorentzian Factorization Machine">
+<meta property="og:url" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/index.html">
 <meta property="og:site_name" content="Hello World">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="摘要&amp;emsp; &amp;emsp; 学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互。但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。&amp;emsp; &amp;emsp;作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-11-15T03:08:04.298Z">
-<meta property="article:modified_time" content="2021-11-15T04:11:00.098Z">
+<meta property="article:published_time" content="2021-11-16T09:02:14.000Z">
+<meta property="article:modified_time" content="2021-11-16T14:54:01.028Z">
 <meta property="article:author" content="yogattt">
+<meta property="article:tag" content="AAAI20">
+<meta property="article:tag" content="FM">
+<meta property="article:tag" content="CTR">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2021/11/15/hello-world/">
+<link rel="canonical" href="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/">
 
 
 <script id="page-configurations">
@@ -45,7 +48,7 @@
   };
 </script>
 
-  <title>Hello World | Hello World</title>
+  <title>Learning Feature Interactions with Lorentzian Factorization Machine | Hello World</title>
   
 
 
@@ -160,7 +163,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/15/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -173,7 +176,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          Learning Feature Interactions with Lorentzian Factorization Machine
         </h1>
 
         <div class="post-meta">
@@ -184,7 +187,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-11-15 11:08:04 / Modified: 12:11:00" itemprop="dateCreated datePublished" datetime="2021-11-15T11:08:04+08:00">2021-11-15</time>
+              <time title="Created: 2021-11-16 17:02:14 / Modified: 22:54:01" itemprop="dateCreated datePublished" datetime="2021-11-16T17:02:14+08:00">2021-11-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -192,7 +195,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">hexo使用</span></a>
+                  <a href="/categories/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a>
                 </span>
             </span>
 
@@ -207,19 +210,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>&emsp; &emsp; 学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互。但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。<br><br><br>&emsp; &emsp;作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）中的特征相互作用，在双曲空间中，Lorentz距离的三角不等式是可用的。双曲三角形的特殊几何特性对学习特征交互的表示是有益的。并且因为不需要任何顶部深度学习层，参数数量显著减少（20%至80%）。</p>
+<blockquote>
+<p>To this end, the learned representation is benefited by the peculiar geometric properties of hyperbolic triangles, and result in a significant reduction in the number of parameters (20% to 80%) because all the top deep<br>learning layers are not required.</p>
+</blockquote>
 
     </div>
 
@@ -228,17 +222,22 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AAAI20/" rel="tag"># AAAI20</a>
+              <a href="/tags/FM/" rel="tag"># FM</a>
+              <a href="/tags/CTR/" rel="tag"># CTR</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/11/15/Multi-Interactive-Attention-Network-for-Fine-grained-Feature-Learning-in-CTR-Prediction/" rel="next" title="Multi-Interactive Attention Network for Fine-grained Feature Learning in CTR Prediction">
-      Multi-Interactive Attention Network for Fine-grained Feature Learning in CTR Prediction <i class="fa fa-chevron-right"></i>
+    <a href="/2021/11/15/Multi-Interactive-Attention-Network-for-Fine-grained-Feature-Learning-in-CTR-Prediction/" rel="prev" title="Multi-Interactive Attention Network for Fine-grained Feature Learning in CTR Prediction">
+      <i class="fa fa-chevron-left"></i> Multi-Interactive Attention Network for Fine-grained Feature Learning in CTR Prediction
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -297,7 +296,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
