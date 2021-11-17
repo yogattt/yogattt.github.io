@@ -28,7 +28,7 @@
 <meta property="og:description" content="摘要&amp;emsp; &amp;emsp; 学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互,但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。   &amp;emsp; &amp;emsp;作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic spa">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-11-16T09:02:14.000Z">
-<meta property="article:modified_time" content="2021-11-16T16:29:57.204Z">
+<meta property="article:modified_time" content="2021-11-17T07:33:30.956Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="AAAI20">
 <meta property="article:tag" content="FM">
@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-17 00:29:57" itemprop="dateModified" datetime="2021-11-17T00:29:57+08:00">2021-11-17</time>
+                <time title="Modified: 2021-11-17 15:33:30" itemprop="dateModified" datetime="2021-11-17T15:33:30+08:00">2021-11-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -219,7 +219,7 @@
         <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>&emsp; &emsp; 学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互,但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。  </p>
 <p>&emsp; &emsp;作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）中的特征相互作用，在双曲空间中，Lorentz距离的三角不等式的破坏是可实现的。双曲三角形的特殊几何特性对学习特征交互的表示是有益的。并且因为不需要任何顶部深度学习层，参数数量显著减少（20%至80%）。  </p>
 <p>&emsp;&emsp;作者提出在使用Lorentz距离的双曲空间中学习低维表示，这样就能违反特征向量的三角不等式。该想法是受collaborative metric learning (CML) (Hsieh et al. 2017) 工作的启发。不同的是，CML作者认为欧氏空间中的三角形不等式应该严格遵守，本文作者提出利用三角形不等式的符号。具体地说，本文作者不是通过特征向量之间的内积或距离，而是通过检查它们在双曲空间中形成的三角形来构造特征交互的分数函数。采取这种做法的原因有两个方面：<br>&emsp;&emsp;&emsp;&emsp;1.双曲空间本质上比欧几里德空间更广阔；<br>&emsp;&emsp;&emsp;&emsp;2.提出的分数函数将提供一个鲁棒的目标函数来学习细粒度特征交互。  </p>
-<h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><h3 id="双曲几何-Hyperbolic-Geometry"><a href="#双曲几何-Hyperbolic-Geometry" class="headerlink" title="双曲几何(Hyperbolic Geometry)"></a>双曲几何(Hyperbolic Geometry)</h3><p>&emsp;&emsp; </p>
+<h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><h3 id="双曲几何-Hyperbolic-Geometry"><a href="#双曲几何-Hyperbolic-Geometry" class="headerlink" title="双曲几何(Hyperbolic Geometry)"></a><strong>双曲几何(Hyperbolic Geometry)</strong></h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/baiting/p/11006331.html">推荐阅读</a><br>&emsp;&emsp; 双曲几何旨在研究具有常数负曲率的非欧几里德空间。由于其负曲率，双曲几何与欧几里德几何相比具有非常不同的性质。<br>&emsp;&emsp; 首先，与欧几里德空间中的线性和二次增长率相反，双曲空间中圆的周长和面积随半径呈指数增长。因此，在半径上界相同的双曲空间中嵌入的容量比欧几里德空间中嵌入的容量大得多。其次，定义在洛伦兹距离下的三角不等式是可以违反。这个性质使我们能够用不等式的符号来刻画双曲空间中点之间的成对关系。（双曲空间有几个重要的计算模型： the Poincare ball model, the hyper-boloid model, the Klein model）<br><strong>Hyperboloid Model</strong><br>定义 $\textbf{u},\textbf{v}\in \reals^{n+1}$ 之间的洛伦兹内积如下：<br>$$\langle \textbf{u},\textbf{v} \rangle_L = -u_0v_0+\sum_{i=1}^nu_iv_i\tag{1}$$<br>n维双曲面 $H^{n,\beta}\subseteq\reals^{n+1}$由一下定义的点集组成：<br>$$H^{n,\beta}=\lbrace\textbf{x}\in \reals^{n+1}:\Vert \textbf{x} \Vert_L^2=-\beta,x_0&gt;\beta \ \tag{2}$$<br>$\Vert \textbf{x} \Vert_L^2=\langle \textbf{x},\textbf{x} \rangle_L$ 表示向量X的洛伦兹范数。在此定义下，每个向量 $\textbf{x}\in H^{n,\beta}$ 的第0维度 $x_0$由一下公式定义：<br>$$x_0=\sqrt{\beta+\sum_{i=1}^n x_i}\tag{3}$$ </p>
 
     </div>
 
