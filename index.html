@@ -186,7 +186,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-17 15:33:30" itemprop="dateModified" datetime="2021-11-17T15:33:30+08:00">2021-11-17</time>
+                <time title="Modified: 2021-11-18 00:32:27" itemprop="dateModified" datetime="2021-11-18T00:32:27+08:00">2021-11-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,24 +209,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="摘要">摘要</h2>
-<p>    学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互,但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。</p>
-<p>   作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）中的特征相互作用，在双曲空间中，Lorentz距离的三角不等式的破坏是可实现的。双曲三角形的特殊几何特性对学习特征交互的表示是有益的。并且因为不需要任何顶部深度学习层，参数数量显著减少（20%至80%）。</p>
-<p>  作者提出在使用Lorentz距离的双曲空间中学习低维表示，这样就能违反特征向量的三角不等式。该想法是受collaborative metric learning (CML) (Hsieh et al. 2017) 工作的启发。不同的是，CML作者认为欧氏空间中的三角形不等式应该严格遵守，本文作者提出利用三角形不等式的符号。具体地说，本文作者不是通过特征向量之间的内积或距离，而是通过检查它们在双曲空间中形成的三角形来构造特征交互的分数函数。采取这种做法的原因有两个方面：<br>
-    1.双曲空间本质上比欧几里德空间更广阔；<br>
-    2.提出的分数函数将提供一个鲁棒的目标函数来学习细粒度特征交互。</p>
-<h2 id="技术背景">技术背景</h2>
-<h3 id="双曲几何-Hyperbolic-Geometry"><strong>双曲几何(Hyperbolic Geometry)</strong></h3>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/baiting/p/11006331.html">推荐阅读</a><br>
-   双曲几何旨在研究具有常数负曲率的非欧几里德空间。由于其负曲率，双曲几何与欧几里德几何相比具有非常不同的性质。<br>
-   首先，与欧几里德空间中的线性和二次增长率相反，双曲空间中圆的周长和面积随半径呈指数增长。因此，在半径上界相同的双曲空间中嵌入的容量比欧几里德空间中嵌入的容量大得多。其次，定义在洛伦兹距离下的三角不等式是可以违反。这个性质使我们能够用不等式的符号来刻画双曲空间中点之间的成对关系。（双曲空间有几个重要的计算模型： the Poincare ball model, the hyper-boloid model, the Klein model）<br>
-<strong>Hyperboloid Model</strong><br>
-定义 $\textbf{u},\textbf{v}\in \reals^{n+1}$ 之间的洛伦兹内积如下：<br>
-$$\langle \textbf{u},\textbf{v} \rangle_L = -u_0v_0+\sum_{i=1}^nu_iv_i\tag{1}$$<br>
-n维双曲面 $H^{n,\beta}\subseteq\reals^{n+1}$由一下定义的点集组成：<br>
-$$H^{n,\beta}=\lbrace\textbf{x}\in \reals^{n+1}:\Vert \textbf{x} \Vert_L^2=-\beta,x_0&gt;\beta \ \tag{2}$$<br>
-$\Vert \textbf{x} \Vert_L^2=\langle \textbf{x},\textbf{x} \rangle_L$ 表示向量X的洛伦兹范数。在此定义下，每个向量 $\textbf{x}\in H^{n,\beta}$ 的第0维度 $x_0$由一下公式定义：<br>
-$$x_0=\sqrt{\beta+\sum_{i=1}^n x_i}\tag{3}$$</p>
+          <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>&emsp; &emsp; 学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互,但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。  </p>
+<p>&emsp; &emsp;作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）中的特征相互作用，在双曲空间中，Lorentz距离的三角不等式的破坏是可实现的。双曲三角形的特殊几何特性对学习特征交互的表示是有益的。并且因为不需要任何顶部深度学习层，参数数量显著减少（20%至80%）。  </p>
+<p>&emsp;&emsp;作者提出在使用Lorentz距离的双曲空间中学习低维表示，这样就能违反特征向量的三角不等式。该想法是受collaborative metric learning (CML) (Hsieh et al. 2017) 工作的启发。不同的是，CML作者认为欧氏空间中的三角形不等式应该严格遵守，本文作者提出利用三角形不等式的符号。具体地说，本文作者不是通过特征向量之间的内积或距离，而是通过检查它们在双曲空间中形成的三角形来构造特征交互的分数函数。采取这种做法的原因有两个方面：<br>&emsp;&emsp;&emsp;&emsp;1.双曲空间本质上比欧几里德空间更广阔；<br>&emsp;&emsp;&emsp;&emsp;2.提出的分数函数将提供一个鲁棒的目标函数来学习细粒度特征交互。  </p>
+<h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><h3 id="双曲几何-Hyperbolic-Geometry"><a href="#双曲几何-Hyperbolic-Geometry" class="headerlink" title="双曲几何(Hyperbolic Geometry)"></a><strong>双曲几何(Hyperbolic Geometry)</strong></h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/baiting/p/11006331.html">推荐阅读</a><br>&emsp;&emsp; 双曲几何旨在研究具有常数负曲率的非欧几里德空间。由于其负曲率，双曲几何与欧几里德几何相比具有非常不同的性质。<br>&emsp;&emsp; 首先，与欧几里德空间中的线性和二次增长率相反，双曲空间中圆的周长和面积随半径呈指数增长。因此，在半径上界相同的双曲空间中嵌入的容量比欧几里德空间中嵌入的容量大得多。其次，定义在洛伦兹距离下的三角不等式是可以违反。这个性质使我们能够用不等式的符号来刻画双曲空间中点之间的成对关系。（双曲空间有几个重要的计算模型： the Poincare ball model, the hyper-boloid model, the Klein model）<br><strong>Hyperboloid Model</strong><br>&emsp;&emsp;定义 $\textbf{u},\textbf{v}\in \mathbb{R}^{n+1}$ 之间的洛伦兹内积如下：  </p>
+<script type="math/tex; mode=display">\langle \textbf{u},\textbf{v} \rangle_L = -u_0v_0+\sum_{i=1}^nu_iv_i\tag{1} \label{eq1}</script><p>&emsp;&emsp;n维双曲面 $H^{n,\beta}\subseteq\mathbb{R}^{n+1}$由一下定义的点集组成：</p>
+<script type="math/tex; mode=display">H^{n,\beta}=\lbrace\textbf{x}\in \mathbb{R}^{n+1}:\Vert \textbf{x} \Vert_L^2=-\beta,x_0>\beta \rbrace \tag{2} \label{eq2}</script><p>&emsp;&emsp;$\Vert \textbf{x} \Vert_L^2=\langle \textbf{x},\textbf{x} \rangle_L$ 表示向量X的洛伦兹范数。在此定义下，每个向量 $\textbf{x}\in H^{n,\beta}$ 的第0维度 $x_0$ 不能随意指定，应由以下公式定义：</p>
+<script type="math/tex; mode=display">x_0=\sqrt{\beta+\sum_{i=1}^n x_i}\tag{3} \label{eq3}</script><p>&emsp;&emsp;两点之间的相关测地距离为:  </p>
+<script type="math/tex; mode=display">d_l( \textbf{u},\textbf{v})=arccosh(-\langle\textbf{u},\textbf{v}\rangle_L) \tag{4}\label{eq4}</script><p>&emsp;&emsp;请注意，双曲面模型 $H^{n,\beta}$ 的原点向量为 $\boldsymbol{0}=(\beta,0,…,0)$ 并且 $\boldsymbol{0}$ 与任意向量 $\textbf{x}\in \mathbb{R}^{n+1}$ 的洛伦兹内积定义为 $\langle\textbf{0},\textbf{x}\rangle=-x_0&lt;\beta$.这里原点向量的定义和原点向量与其他向量的内积应该是特殊定义，因为它们分别不满足等式 $\eqref{eq2}$ 和 $\eqref{eq1}$<br>&emsp;&emsp;当 $\beta=1$时，该模型称为单位双曲面模型（unit Hyperboloid Model）。这将贯穿整个论文，并且将 $H^{n,1}$ 简记为 $H^{n}$。<br><br><strong>Lorentz Distance</strong><br>&emsp;&emsp;$\textbf{u}$ , $\textbf{v} \in H^n$ 之间的平方洛伦兹距离（简称洛伦兹距离）定义如下：  </p>
+<script type="math/tex; mode=display">d_L^2(\textbf{u},\textbf{v})=\Vert \textbf{u}-\textbf{v}\Vert_L^2=-2-2\langle\textbf{u},\textbf{v}\rangle_L\tag{5}\label{eq5}</script><p>&emsp;&emsp;它几乎满足欧几里得几何的所有公理，但是不满足三角不等式。三角不等式是正定黎曼度量的最关键几何性质之一，它表明对于任意三个点 $\textbf{x}$,$\textbf{y}$,$\textbf{z}$，任意两对点之间的距离$d(.,.)$的和大于或等于剩下一个点对之间的距离。</p>
+<script type="math/tex; mode=display">d(\textbf{x},\textbf{y})\leq d(\textbf{x},\textbf{z})+d(\textbf{z},\textbf{y})\tag{6}\label{eq6}</script><p>&emsp;&emsp;在双曲空间中，公式$\eqref{eq4}$定义的测地距离满足此不等式，但是在洛伦兹距离$\eqref{eq5}$下,可能不满足此不等式，因为黎曼度量是负的。考虑原点和两个点$\textbf{u}$,$\textbf{v}$组成的三角形，如图1所示。当两个点在$x_1$轴不同边相距很远时，违反了三角不等式。如果两个点在同$x_1$轴一边，三角不等式成立。<br><img src="triangle.png" alt="图一">  </p>
+<center> 图1 (a)违反了三角不等式,（b）满足三角不等式 $\label{pic1}$</center>  
+
 
       
     </div>
@@ -358,18 +352,13 @@ $$x_0=\sqrt{\beta+\sum_{i=1}^n x_i}\tag{3}$$</p>
 
       
           <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start">Quick Start</h2>
-<h3 id="Create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 
       
@@ -552,8 +541,60 @@ $$x_0=\sqrt{\beta+\sum_{i=1}^n x_i}\tag{3}$$</p>
 
   
       
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0/dist/katex.min.css">
 
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
