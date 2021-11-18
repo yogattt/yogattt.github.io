@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-18 18:25:26" itemprop="dateModified" datetime="2021-11-18T18:25:26+08:00">2021-11-18</time>
+                <time title="Modified: 2021-11-18 18:29:30" itemprop="dateModified" datetime="2021-11-18T18:29:30+08:00">2021-11-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,10 +226,11 @@
 <script type="math/tex; mode=display">
 \mathcal{T}(\textbf{x},\textbf{y})={d_{\mathcal{L}}^2(\textbf{x},\textbf{y})-d_{\mathcal{L}}^2(\textbf{x},\textbf{0})-d_{\mathcal{L}}^2(\textbf{0},\textbf{y}) \over \langle\textbf{0},\textbf{x}\rangle_{\mathcal{L}}\langle\textbf{0},\textbf{y}\rangle_{\mathcal{L}}}\tag{7}\label{eq7}</script><p>分子为不等式两边的差，分母是为了约束score function.<br>&emsp;&emsp;该score function 对于所有的维度，取值范围均为[-0.5,2].因此，与协同度量学习方案相比，分数函数不受维度的影响。如图2（a），为了说明函数的布局，绘制了等式（7）在2D中两点的取值。<br><img src="2D.jpg" alt="图2"></p>
 <center>图2 （a）triangle learning方案（例如，等式$\eqref{eq7}$）和（b）在二维双曲面模型中使用测地距离的度量学习方案中分数函数的二维图</center> 
-因为二维双曲模型中的点只有一个自由参数（参考$\eqref{eq3}$），因此图中的x轴和y轴分别表示两个点的自由参数。同时，作者使用等式$\eqref{eq4}$中定义的测地距离绘制了协同度量学习方案的取值图2（b）。通过比较，可以观察到作者提出的方法的取值是平滑和有界的，但是协作度量学习方案的得分函数取值是无界的。有界性是有用的，因为嵌入向量可以自由地远离原点，而分数函数仍可以平滑增长。  
+因为二维双曲模型中的点只有一个自由参数（参考$\eqref{eq3}$），因此图中的x轴和y轴分别表示两个点的自由参数。同时，作者使用等式$\eqref{eq4}$中定义的测地距离绘制了协同度量学习方案的取值图2（b）。通过比较，可以观察到作者提出的方法的取值是平滑和有界的，但是协作度量学习方案的得分函数取值是无界的。有界性是有用的，因为嵌入向量可以自由地远离原点，而分数函数仍可以平滑增长。
 
-## **Lorentzian Factorization Machine**
-![图3](architecture.jpg)
+## Lorentzian Factorization Machine
+
+![图3](pic3.jpg)  
 <center>图3 LorentzFM结构图</center>   
 
 <h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a><strong>Overview</strong></h3><p>&emsp;&emsp;如图三所示，稀疏特征向量$\mathcal{V}_x$作为模型输入。经过Lorentz embedding layer，将所有特征投影到同一个双曲空间。接下来，将所有字段的嵌入引入一个新的triangle pooling层，该层作为所有特征对的聚合函数，从整体上度量三角形不等式的 soft “validness” 。与最近建立在欧几里德嵌入基础上的最先进的神经结构不同，LorentzFM不需要任何额外的参数。特别是，对于给定的稀疏输入$V_x$，池化层的输出是模型输出分数：</p>
