@@ -30,8 +30,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/triangle.png">
 <meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/2D.jpg">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/pic3.jpg">
 <meta property="article:published_time" content="2021-11-16T09:02:14.000Z">
-<meta property="article:modified_time" content="2021-11-18T10:29:30.561Z">
+<meta property="article:modified_time" content="2021-11-18T10:33:28.607Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="AAAI20">
 <meta property="article:tag" content="FM">
@@ -197,7 +198,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-18 18:29:30" itemprop="dateModified" datetime="2021-11-18T18:29:30+08:00">2021-11-18</time>
+                <time title="Modified: 2021-11-18 18:33:28" itemprop="dateModified" datetime="2021-11-18T18:33:28+08:00">2021-11-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,15 +236,9 @@
 <h3 id="Learning-Triangle-Inequalities"><a href="#Learning-Triangle-Inequalities" class="headerlink" title="Learning Triangle Inequalities"></a><strong>Learning Triangle Inequalities</strong></h3><p>&emsp;&emsp;Hsieh et al. (2017)指出学习嵌入空间中的距离而不是内积有利于学习细粒度的嵌入空间，该空间不仅可以捕获item-user交互的表示，还可以捕获item-item和user-user距离的表示。本质上，所谓的度量学习方案(metric learning scheme)受到三角不等式的约束。<br>&emsp;&emsp;与协同度量学习方案相反，作者认为两点之间的特征交互可以通过洛伦兹距离的三角不等式的符号来学习，而不是使用距离本身。形式上，score function写为：</p>
 <script type="math/tex; mode=display">
 \mathcal{T}(\textbf{x},\textbf{y})={d_{\mathcal{L}}^2(\textbf{x},\textbf{y})-d_{\mathcal{L}}^2(\textbf{x},\textbf{0})-d_{\mathcal{L}}^2(\textbf{0},\textbf{y}) \over \langle\textbf{0},\textbf{x}\rangle_{\mathcal{L}}\langle\textbf{0},\textbf{y}\rangle_{\mathcal{L}}}\tag{7}\label{eq7}</script><p>分子为不等式两边的差，分母是为了约束score function.<br>&emsp;&emsp;该score function 对于所有的维度，取值范围均为[-0.5,2].因此，与协同度量学习方案相比，分数函数不受维度的影响。如图2（a），为了说明函数的布局，绘制了等式（7）在2D中两点的取值。<br><img src="2D.jpg" alt="图2"></p>
-<center>图2 （a）triangle learning方案（例如，等式$\eqref{eq7}$）和（b）在二维双曲面模型中使用测地距离的度量学习方案中分数函数的二维图</center> 
-因为二维双曲模型中的点只有一个自由参数（参考$\eqref{eq3}$），因此图中的x轴和y轴分别表示两个点的自由参数。同时，作者使用等式$\eqref{eq4}$中定义的测地距离绘制了协同度量学习方案的取值图2（b）。通过比较，可以观察到作者提出的方法的取值是平滑和有界的，但是协作度量学习方案的得分函数取值是无界的。有界性是有用的，因为嵌入向量可以自由地远离原点，而分数函数仍可以平滑增长。
-
-## Lorentzian Factorization Machine
-
-![图3](pic3.jpg)  
-<center>图3 LorentzFM结构图</center>   
-
-<h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a><strong>Overview</strong></h3><p>&emsp;&emsp;如图三所示，稀疏特征向量$\mathcal{V}_x$作为模型输入。经过Lorentz embedding layer，将所有特征投影到同一个双曲空间。接下来，将所有字段的嵌入引入一个新的triangle pooling层，该层作为所有特征对的聚合函数，从整体上度量三角形不等式的 soft “validness” 。与最近建立在欧几里德嵌入基础上的最先进的神经结构不同，LorentzFM不需要任何额外的参数。特别是，对于给定的稀疏输入$V_x$，池化层的输出是模型输出分数：</p>
+<p><center>图2 （a）triangle learning方案（例如，等式$\eqref{eq7}$）和（b）在二维双曲面模型中使用测地距离的度量学习方案中分数函数的二维图</center><br>因为二维双曲模型中的点只有一个自由参数（参考$\eqref{eq3}$），因此图中的x轴和y轴分别表示两个点的自由参数。同时，作者使用等式$\eqref{eq4}$中定义的测地距离绘制了协同度量学习方案的取值图2（b）。通过比较，可以观察到作者提出的方法的取值是平滑和有界的，但是协作度量学习方案的得分函数取值是无界的。有界性是有用的，因为嵌入向量可以自由地远离原点，而分数函数仍可以平滑增长。</p>
+<h2 id="Lorentzian-Factorization-Machine"><a href="#Lorentzian-Factorization-Machine" class="headerlink" title="Lorentzian Factorization Machine"></a>Lorentzian Factorization Machine</h2><h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a><strong>Overview</strong></h3><p><img src="pic3.jpg" alt="图3">  </p>
+<p><center>图3 LorentzFM结构图</center><br>&emsp;&emsp;如图三所示，稀疏特征向量$\mathcal{V}_x$作为模型输入。经过Lorentz embedding layer，将所有特征投影到同一个双曲空间。接下来，将所有字段的嵌入引入一个新的triangle pooling层，该层作为所有特征对的聚合函数，从整体上度量三角形不等式的 soft “validness” 。与最近建立在欧几里德嵌入基础上的最先进的神经结构不同，LorentzFM不需要任何额外的参数。特别是，对于给定的稀疏输入$V_x$，池化层的输出是模型输出分数：</p>
 <script type="math/tex; mode=display">\hat{S}_{LFM}(\mathcal{V}_x)=\sum_{i,j=1,i\neq j}^d \mathcal{T} (\textbf{v}_i,\textbf{v}_j)x_ix_j \tag{8}\label{eq8}</script><p>其中$\textbf{v}_i,\textbf{v}_j \in H^n$是每个输入特征字段的嵌入向量。$\mathcal{T}(.,.)$是特征交互函数。虽然在公式（8）中形式上缺少线性项，但它实际上在池函数$\mathcal{T}(.,.)$中重新出现，如下文所示。（为什么作者强调要有线性项）  </p>
 <h3 id="Lorentz-Embedding-Layer"><a href="#Lorentz-Embedding-Layer" class="headerlink" title="Lorentz Embedding Layer"></a><strong>Lorentz Embedding Layer</strong></h3><p>&emsp;&emsp;嵌入层是一个lookup操作，用于将稀疏特征投影到洛伦兹空间中的低维密集向量。即$\textbf{v}_k\in H^n$是第k个特征的嵌入向量，而第0个分量由等式$\eqref{eq3}$中的约束给出。<br>&emsp;&emsp;在某些情况下，分类特征可以是多值的。例如，电影《泰坦尼克号》的类型可以是“Drama”或“Romance”。因此为这些分类特征使用多个字段，并用“unknown”填充它们，以确保每个样本在特征维度上对齐。  </p>
 <h3 id="Triangle-Pooling-Layer"><a href="#Triangle-Pooling-Layer" class="headerlink" title="Triangle Pooling Layer"></a><strong>Triangle Pooling Layer</strong></h3><p>&emsp;&emsp;Pooling 层是一个聚合函数，用于将一组嵌入向量转换为一个向量：</p>
@@ -337,7 +332,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">技术背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%9B%B2%E5%87%A0%E4%BD%95-Hyperbolic-Geometry"><span class="nav-number">2.1.</span> <span class="nav-text">双曲几何(Hyperbolic Geometry)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Learning-Triangle-Inequalities"><span class="nav-number">2.2.</span> <span class="nav-text">Learning Triangle Inequalities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview"><span class="nav-number">2.3.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lorentz-Embedding-Layer"><span class="nav-number">2.4.</span> <span class="nav-text">Lorentz Embedding Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Triangle-Pooling-Layer"><span class="nav-number">2.5.</span> <span class="nav-text">Triangle Pooling Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Objective-and-Learning"><span class="nav-number">2.6.</span> <span class="nav-text">Objective and Learning</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">技术背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%9B%B2%E5%87%A0%E4%BD%95-Hyperbolic-Geometry"><span class="nav-number">2.1.</span> <span class="nav-text">双曲几何(Hyperbolic Geometry)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Learning-Triangle-Inequalities"><span class="nav-number">2.2.</span> <span class="nav-text">Learning Triangle Inequalities</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lorentzian-Factorization-Machine"><span class="nav-number">3.</span> <span class="nav-text">Lorentzian Factorization Machine</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview"><span class="nav-number">3.1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lorentz-Embedding-Layer"><span class="nav-number">3.2.</span> <span class="nav-text">Lorentz Embedding Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Triangle-Pooling-Layer"><span class="nav-number">3.3.</span> <span class="nav-text">Triangle Pooling Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Objective-and-Learning"><span class="nav-number">3.4.</span> <span class="nav-text">Objective and Learning</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
