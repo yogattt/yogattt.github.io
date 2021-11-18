@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-18 18:21:04" itemprop="dateModified" datetime="2021-11-18T18:21:04+08:00">2021-11-18</time>
+                <time title="Modified: 2021-11-18 18:23:14" itemprop="dateModified" datetime="2021-11-18T18:23:14+08:00">2021-11-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,11 +233,14 @@
 <center>图3 LorentzFM结构图</center>   
 
 <h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a><strong>Overview</strong></h3><p>&emsp;&emsp;如图三所示，稀疏特征向量$\mathcal{V}_x$作为模型输入。经过Lorentz embedding layer，将所有特征投影到同一个双曲空间。接下来，将所有字段的嵌入引入一个新的triangle pooling层，该层作为所有特征对的聚合函数，从整体上度量三角形不等式的 soft “validness” 。与最近建立在欧几里德嵌入基础上的最先进的神经结构不同，LorentzFM不需要任何额外的参数。特别是，对于给定的稀疏输入$V_x$，池化层的输出是模型输出分数：</p>
-<script type="math/tex; mode=display">\hat{S}_{LFM}(\mathcal{V}_x)=\sum_{i,j=1,i\neq j}^d \mathcal{T} (\textbf{v}_i,\textbf{v}_j)x_ix_j \tag{8}\label{eq8}</script><p>其中$\textbf{v}_i,\textbf{v}_j \in H^n$是每个输入特征字段的嵌入向量。$\mathcal{T}(.,.)$是特征交互函数。虽然在公式（8）中形式上缺少线性项，但它实际上在池函数$\mathcal{T}(.,.)$中重新出现，如下文所示。（为什么作者强调要有线性项）<br><strong>Lorentz Embedding Layer</strong><br>&emsp;&emsp;嵌入层是一个lookup操作，用于将稀疏特征投影到洛伦兹空间中的低维密集向量。即$\textbf{v}_k\in H^n$是第k个特征的嵌入向量，而第0个分量由等式$\eqref{eq3}$中的约束给出。<br>&emsp;&emsp;在某些情况下，分类特征可以是多值的。例如，电影《泰坦尼克号》的类型可以是“Drama”或“Romance”。因此为这些分类特征使用多个字段，并用“unknown”填充它们，以确保每个样本在特征维度上对齐。<br><strong>Triangle Pooling Layer</strong><br>&emsp;&emsp;Pooling 层是一个聚合函数，用于将一组嵌入向量转换为一个向量：</p>
+<script type="math/tex; mode=display">\hat{S}_{LFM}(\mathcal{V}_x)=\sum_{i,j=1,i\neq j}^d \mathcal{T} (\textbf{v}_i,\textbf{v}_j)x_ix_j \tag{8}\label{eq8}</script><p>其中$\textbf{v}_i,\textbf{v}_j \in H^n$是每个输入特征字段的嵌入向量。$\mathcal{T}(.,.)$是特征交互函数。虽然在公式（8）中形式上缺少线性项，但它实际上在池函数$\mathcal{T}(.,.)$中重新出现，如下文所示。（为什么作者强调要有线性项）  </p>
+<h3 id="Lorentz-Embedding-Layer"><a href="#Lorentz-Embedding-Layer" class="headerlink" title="Lorentz Embedding Layer"></a><strong>Lorentz Embedding Layer</strong></h3><p>&emsp;&emsp;嵌入层是一个lookup操作，用于将稀疏特征投影到洛伦兹空间中的低维密集向量。即$\textbf{v}_k\in H^n$是第k个特征的嵌入向量，而第0个分量由等式$\eqref{eq3}$中的约束给出。<br>&emsp;&emsp;在某些情况下，分类特征可以是多值的。例如，电影《泰坦尼克号》的类型可以是“Drama”或“Romance”。因此为这些分类特征使用多个字段，并用“unknown”填充它们，以确保每个样本在特征维度上对齐。  </p>
+<h3 id="Triangle-Pooling-Layer"><a href="#Triangle-Pooling-Layer" class="headerlink" title="Triangle Pooling Layer"></a><strong>Triangle Pooling Layer</strong></h3><p>&emsp;&emsp;Pooling 层是一个聚合函数，用于将一组嵌入向量转换为一个向量：</p>
 <script type="math/tex; mode=display">
 \mathcal{T}(\textbf{u},\textbf{v})={d_{\mathcal{L}}^2(\textbf{u},\textbf{v})-d_{\mathcal{L}}^2(\textbf{u},\textbf{0})-d_{\mathcal{L}}^2(\textbf{0},\textbf{v}) \over 2\langle\textbf{0},\textbf{u}\rangle_{\mathcal{L}}\langle\textbf{0},\textbf{v}\rangle_{\mathcal{L}}}</script><script type="math/tex; mode=display">
 ={1-\langle\textbf{u},\textbf{v}\rangle_{\mathcal{L}}-u_0-v_0 \over u_0v_0}</script><script type="math/tex; mode=display">
-={1-\langle\textbf{u},\textbf{v}\rangle_{\mathcal{L}} \over 2u_0v_0}-\left({1\over u_0}+{1\over v_0}\right)\tag{9}\label{eq9}</script><p>由于标准化分母，出现了线性项，如公式最后一行$\left({1\over u_0}+{1\over v_0}\right)$所示。<br><strong>Objective and Learning</strong><br>&emsp;&emsp;推荐系统和CTR预测的目标函数是二元交叉熵（BCE）：</p>
+={1-\langle\textbf{u},\textbf{v}\rangle_{\mathcal{L}} \over 2u_0v_0}-\left({1\over u_0}+{1\over v_0}\right)\tag{9}\label{eq9}</script><p>由于标准化分母，出现了线性项，如公式最后一行$\left({1\over u_0}+{1\over v_0}\right)$所示。  </p>
+<h3 id="Objective-and-Learning"><a href="#Objective-and-Learning" class="headerlink" title="Objective and Learning"></a><strong>Objective and Learning</strong></h3><p>&emsp;&emsp;推荐系统和CTR预测的目标函数是二元交叉熵（BCE）：</p>
 <script type="math/tex; mode=display">
 \arg\,\min_{\theta}\sum_i-y_ilog(p_i)-(1-y_i)log(1-p_i)\tag{10}\label{eq10}</script><p>i表示第i个样本，其中$p_i=\sigma\left(\hat{S}_{LFM}\left(\mathcal{V}_x^i\right)\right)$,为第i输入样本$\mathcal{V}_x^i$的（点击）可能性。$y_i$是真实标签。作者指出，尽管贝叶斯个性化排名（Bayesian Personalized Ranking, BPR）损失（Rendle et al.2009）在普遍的推荐系统中被证明是有用的，但作者不使用它，因为BCE损失是符号敏感的，这是期望的属性，而BPR损失不是。<br>&emsp;&emsp;模型参数是通过使用黎曼随机梯度下降法（RSGD）（Bonnabel 2013）学习的。如Nickel和Kiela（2018）提到的，参数更新方式如下所示：</p>
 <script type="math/tex; mode=display">
