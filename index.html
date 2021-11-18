@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-19 00:57:24" itemprop="dateModified" datetime="2021-11-19T00:57:24+08:00">2021-11-19</time>
+                <time title="Modified: 2021-11-19 01:21:59" itemprop="dateModified" datetime="2021-11-19T01:21:59+08:00">2021-11-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -289,6 +289,21 @@ exp_{\theta_t}(\textbf{x})=cosh(\Vert\textbf{v}\Vert_{\mathcal{L}})\textbf{x}+si
 表1 数据预处理后的数据集统计。在Avazu数据集中，itemID和userID没有明确的指示符，因此将相应的行留空。
 </center>
 <p>Steam, MovieLens and KKBox数据集用于推荐任务，Avazu用于CTR任务。</p>
+<img src="table2.jpg" title="fig:" alt="表2" />
+<center>
+表2 每个模型在测试集上的最佳性能。
+</center>
+<p>从表2可发现， 除了MovieLens数据集，LorentzFM的效果比其他模型都好。原因是MovieLens的稀疏特征的数量是其他数据集的5到100倍，说明当数据非常稀疏时，LorentzFM功能尤其强大。</p>
+<img src="table3.jpg" title="fig:" alt="表3" />
+<center>
+表3 在最佳性能下，每个模型的训练参数数量与训练时间比较表。
+</center>
+<img src="figure5.jpg" title="fig:" alt="图5" />
+<center>
+图5 Visualization of the heatmap of score functions from LorentzFM for (a) a positive sample and (b) a negative sample, and from FM for the same (c) positive sample and (d) negative sample
+</center>
+<p>  作者选了一个典型的用户(user ID “76561198071045315”)。该用户几乎所有正评分都是Steam中免费的游戏。针对该用户，作者画了图5。从图5中可以发现，对于游戏是免费的正样本，由LorentzFM学习到的“UserID” 和 “Price”的特征交互分数达到了最高0.4。说明用户非常倾向于免费的物品。而从图5（c）并不能得到该信息。<br />
+  对于游戏价格为$14.99的负样本，由LorentzFM学习到的“UserID” 和 “Price”的特征交互分数几乎是最低的负数。这意味着负样本主要是由于其价格而被识别的。而FM中“UserID” 和 “Price” 的内积结果并不占主要地位。</p>
 
       
     </div>
