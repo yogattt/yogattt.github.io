@@ -30,7 +30,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure1.png">
 <meta property="article:published_time" content="2021-11-25T13:10:16.000Z">
-<meta property="article:modified_time" content="2021-11-26T12:14:56.197Z">
+<meta property="article:modified_time" content="2021-11-26T14:19:37.301Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="sigir">
 <meta property="article:tag" content="2021">
@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 20:14:56" itemprop="dateModified" datetime="2021-11-26T20:14:56+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-26 22:19:37" itemprop="dateModified" datetime="2021-11-26T22:19:37+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,13 +248,22 @@
 <h4 id="discussion"><strong>Discussion</strong></h4>
 <p>  作者讨论了为什么不使用普通的softmax将多个proxies加权生成对应session的proxy。作者认为，对多个proxies的加权组合会为每个session创建一个独一无二的proxy,这相当于对session encoder 为representation。但是，只从单个session 中很难提取整体兴趣。因此不能保证加权结合能够对多个sessions中的公共整体兴趣建模。而ProxySR选择的是最有可能的一个proxy，因此选择的proxy能够在多个session之间共享，进而能捕捉这些sessions之间的共同信息。</p>
 <h3 id="short-term-interest-encoder"><strong>Short-term Interest Encoder</strong></h3>
-<p>session 中本身包含短期兴趣，因此直接将session encoder 为隐表示作为short-term interest <span class="math inline">\(s^{(s)}\)</span><br />
+<p>  session 中本身包含短期兴趣，因此直接将session encoder 为隐表示作为short-term interest <span class="math inline">\(s^{(s)}\)</span><br />
 <span class="math display">\[
 s^{(s)}=f^S(s)\tag{4}\label{eq4}
 \]</span> 其中<span class="math inline">\(f^S(s)\in\mathbb{R}^d\)</span>为encoder network。<span class="math inline">\(s^{(s)}\in\mathbb{R}^d\)</span> 为session <span class="math inline">\(s\)</span>包含的short-term interest的表示。</p>
 <h4 id="boldsymbolfss实现细节"><strong><span class="math inline">\(\boldsymbol{f^S(s)}\)</span>实现细节</strong></h4>
-<p>考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T \]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span class="math display">\[K=ReLU(XW^{S,(K)}) \]</span> <span class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span class="math display">\[Z=AX+X \]</span> <span class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span> 其中<span class="math inline">\(E_j^S\)</span>为逆序的learnable positional embedding。<span class="math inline">\(X\in\mathbb{R}^{n\times d};W^{S,(Q)},W^{S,(K)},W^{S,(1)},W^{S,(2)}\in\mathbb{R}^{d\times d};b^{S,(1)},b^{S,(2)}\in\mathbb{R}^d\)</span></p>
+<p>  考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T \]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span class="math display">\[K=ReLU(XW^{S,(K)}) \]</span> <span class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span class="math display">\[Z=AX+X \]</span> <span class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span> 其中<span class="math inline">\(E_j^S\)</span>为逆序的learnable positional embedding。<span class="math inline">\(X\in\mathbb{R}^{n\times d};W^{S,(Q)},W^{S,(K)},W^{S,(1)},W^{S,(2)}\in\mathbb{R}^{d\times d};b^{S,(1)},b^{S,(2)}\in\mathbb{R}^d\)</span></p>
 <h3 id="combination"><strong>Combination</strong></h3>
+<p>  该部分将为session s选择好的proxy <span class="math inline">\(p^{(s)}\)</span>和其短期兴趣<span class="math inline">\(s^(s)\)</span>结合到一起，获得会话s的最终表示，然后再用该表示计算该session和目标item i之间相异性得分。然而，根据一些先例研究，简单的加法不能模拟比一对一关系更复杂的三元组内的关系。</p>
+<ul>
+<li>情景1：如果同一个item与两个不同和短期兴趣、同一个selected proxy相关，那么模型可能会认为这两个不同的短期兴趣是相似的，即if <span class="math inline">\(p + s^{(1)} ≈ I_i\)</span> and <span class="math inline">\(p + s^{(2)} ≈ I𝑖\)</span> then $ s^{(1)} ≈ s^{(2)}$</li>
+<li>情景2：如果两个不同的item与同一个proxy相关，且分别与两个相似的短期兴趣相关，那么模型会认为这两个不同的item是相似的，即 if <span class="math inline">\(p + s^{(1)} ≈ I𝑖^{(1)}\)</span> and <span class="math inline">\(p + s^{(2)} ≈ I_i^{(2)}\)</span> where <span class="math inline">\(s^{(1)} ≈ s^{(2)}\)</span>, then <span class="math inline">\(I_i^{(1)} ≈ I_i^{(2)}\)</span></li>
+</ul>
+<p>因此，作者借鉴TransH的思想，将短期兴趣和目标item的embedding投影到超平面（hyperplane），以捕获三元组间复杂的关系。具体来说，首先获得投影到超平面的short-term interest <span class="math inline">\(s_\perp ^{(s)}\)</span>以及目标 item embedding <span class="math inline">\(I_{i\perp}\)</span> <span class="math display">\[
+\boldsymbol{v}={\sum_{j=1}^K\Vert\boldsymbol{\pi_j}V_j\Vert_2\over \Vert\sum_{j=1}^K\boldsymbol{\pi_j}V_j\Vert_2}
+\]</span><br />
+<span class="math display">\[s_\perp ^{(s)}=s^{(s)}-\boldsymbol{v}^Ts^{(s)}\boldsymbol{v}\]</span> <span class="math display">\[I_{i\perp}=I_i-\boldsymbol{v}^TI_i\boldsymbol{v}\]</span> <span class="math inline">\(V\in\mathbb{R}^{K\times d}\)</span> 是proxy hyperplane的单位法向量。<span class="math inline">\(\boldsymbol{v}\in\mathbb{R}^d\)</span>是投影到<span class="math inline">\(p^{(s)}\)</span>的超平面的单位法向量。</p>
 
     </div>
 
