@@ -249,7 +249,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 19:41:01" itemprop="dateModified" datetime="2021-11-26T19:41:01+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-26 20:14:56" itemprop="dateModified" datetime="2021-11-26T20:14:56+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -306,7 +306,8 @@
 s^{(s)}=f^S(s)\tag{4}\label{eq4}
 \]</span> 其中<span class="math inline">\(f^S(s)\in\mathbb{R}^d\)</span>为encoder network。<span class="math inline">\(s^{(s)}\in\mathbb{R}^d\)</span> 为session <span class="math inline">\(s\)</span>包含的short-term interest的表示。</p>
 <h4 id="boldsymbolfss实现细节"><strong><span class="math inline">\(\boldsymbol{f^S(s)}\)</span>实现细节</strong></h4>
-<p>考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T \]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span class="math display">\[K=ReLU(XW^{S,(K)}) \]</span> <span class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span class="math display">\[Z=AX+X \]</span> <span class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span></p>
+<p>考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T \]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span class="math display">\[K=ReLU(XW^{S,(K)}) \]</span> <span class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span class="math display">\[Z=AX+X \]</span> <span class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span> 其中<span class="math inline">\(E_j^S\)</span>为逆序的learnable positional embedding。<span class="math inline">\(X\in\mathbb{R}^{n\times d};W^{S,(Q)},W^{S,(K)},W^{S,(1)},W^{S,(2)}\in\mathbb{R}^{d\times d};b^{S,(1)},b^{S,(2)}\in\mathbb{R}^d\)</span></p>
+<h3 id="combination"><strong>Combination</strong></h3>
 
       
     </div>

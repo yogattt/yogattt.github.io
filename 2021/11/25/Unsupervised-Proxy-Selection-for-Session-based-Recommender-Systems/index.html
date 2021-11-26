@@ -30,7 +30,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure1.png">
 <meta property="article:published_time" content="2021-11-25T13:10:16.000Z">
-<meta property="article:modified_time" content="2021-11-26T11:41:01.843Z">
+<meta property="article:modified_time" content="2021-11-26T12:14:56.197Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="sigir">
 <meta property="article:tag" content="2021">
@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 19:41:01" itemprop="dateModified" datetime="2021-11-26T19:41:01+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-26 20:14:56" itemprop="dateModified" datetime="2021-11-26T20:14:56+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,7 +253,8 @@
 s^{(s)}=f^S(s)\tag{4}\label{eq4}
 \]</span> 其中<span class="math inline">\(f^S(s)\in\mathbb{R}^d\)</span>为encoder network。<span class="math inline">\(s^{(s)}\in\mathbb{R}^d\)</span> 为session <span class="math inline">\(s\)</span>包含的short-term interest的表示。</p>
 <h4 id="boldsymbolfss实现细节"><strong><span class="math inline">\(\boldsymbol{f^S(s)}\)</span>实现细节</strong></h4>
-<p>考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T \]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span class="math display">\[K=ReLU(XW^{S,(K)}) \]</span> <span class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span class="math display">\[Z=AX+X \]</span> <span class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span></p>
+<p>考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T \]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span class="math display">\[K=ReLU(XW^{S,(K)}) \]</span> <span class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span class="math display">\[Z=AX+X \]</span> <span class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span> 其中<span class="math inline">\(E_j^S\)</span>为逆序的learnable positional embedding。<span class="math inline">\(X\in\mathbb{R}^{n\times d};W^{S,(Q)},W^{S,(K)},W^{S,(1)},W^{S,(2)}\in\mathbb{R}^{d\times d};b^{S,(1)},b^{S,(2)}\in\mathbb{R}^d\)</span></p>
+<h3 id="combination"><strong>Combination</strong></h3>
 
     </div>
 
@@ -339,7 +340,7 @@ s^{(s)}=f^S(s)\tag{4}\label{eq4}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methond"><span class="nav-number">2.</span> <span class="nav-text">Methond</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-selection"><span class="nav-number">2.1.</span> <span class="nav-text">Proxy Selection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfps%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.1.1.</span> <span class="nav-text">\(\boldsymbol{f^P(s)}\)实现细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#discussion"><span class="nav-number">2.1.2.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#short-term-interest-encoder"><span class="nav-number">2.2.</span> <span class="nav-text">Short-term Interest Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfss%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">\(\boldsymbol{f^S(s)}\)实现细节</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methond"><span class="nav-number">2.</span> <span class="nav-text">Methond</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-selection"><span class="nav-number">2.1.</span> <span class="nav-text">Proxy Selection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfps%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.1.1.</span> <span class="nav-text">\(\boldsymbol{f^P(s)}\)实现细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#discussion"><span class="nav-number">2.1.2.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#short-term-interest-encoder"><span class="nav-number">2.2.</span> <span class="nav-text">Short-term Interest Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfss%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">\(\boldsymbol{f^S(s)}\)实现细节</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#combination"><span class="nav-number">2.3.</span> <span class="nav-text">Combination</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
