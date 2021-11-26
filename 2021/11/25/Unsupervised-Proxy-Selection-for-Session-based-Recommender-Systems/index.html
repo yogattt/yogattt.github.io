@@ -30,7 +30,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure1.png">
 <meta property="article:published_time" content="2021-11-25T13:10:16.000Z">
-<meta property="article:modified_time" content="2021-11-26T11:01:41.357Z">
+<meta property="article:modified_time" content="2021-11-26T11:41:01.843Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="sigir">
 <meta property="article:tag" content="2021">
@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 19:01:41" itemprop="dateModified" datetime="2021-11-26T19:01:41+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-26 19:41:01" itemprop="dateModified" datetime="2021-11-26T19:41:01+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,13 +240,20 @@
 <span class="math display">\[p^{(s)}=\gamma\sum_{j=1}^k\boldsymbol{\pi_j}P_j\tag{2}\]</span></p>
 <p>其中 <span class="math inline">\(P\in\mathbb{R}^{K\times d}\)</span> 是proxy embedding matrix。<span class="math inline">\(\tau\)</span> 经过几次训练后已经足够小了，因此 <span class="math inline">\(\pi\)</span> 变为一个one-hot vector，并且仅从集合中选择一个proxy embedding。<br />
   当<span class="math inline">\(\tau\)</span>在初始训练阶段较大时，获得的代理的规模可能太小，因为每个proxy都是以均值为 0 随机初始化的，并均匀聚合以相互抵消。因此，作者通过使用 <span class="math inline">\(\gamma\)</span> 重新缩放获得的proxy来防止这个问题，这迫使其 <span class="math inline">\(\mathcal{l}_2\)</span> 范数保持proxies的 <span class="math inline">\(\mathcal{l}_2\)</span>范数的加权平均值。</p>
-<h4 id="encoder-network"><strong>encoder network</strong></h4>
+<h4 id="boldsymbolfps实现细节"><strong><span class="math inline">\(\boldsymbol{f^P(s)}\)</span>实现细节</strong></h4>
 <p>  encoder network如下<br />
 <span class="math display">\[f^P(s)={i\over n} \sum_{j=1}^nW^{P,(2)^T}\sigma\left(W^{P,(1)^T}\left(I_{s_j}+E_j^P\right)\right)\tag{3}\label{eq3}\]</span><br />
 其中，<span class="math inline">\(I_{s_j}\)</span>是session <span class="math inline">\(s\)</span>中第j个item的embedding。<span class="math inline">\(E_j^P\)</span>是对于位置j的learnable positional embedding。<span class="math inline">\(W^{P,(1)^T}\in\mathbb{R}^{d\times\lfloor (d+K)/2\rfloor }\)</span>,<span class="math inline">\(W^{P,(2)^T}\in\mathbb{R}^{\lfloor (d+K)/2\rfloor \times K }\)</span> 为权重矩阵。<span class="math inline">\(\sigma\)</span>为负斜率为0.1的Leaky ReLU。<br />
   注意,在训练阶段，作者使用了全部的session item来选择proxy，而在预测next item <span class="math inline">\(s_t\)</span>时只使用了<span class="math inline">\([s_1,s_2,...s_{t-1}]\)</span></p>
 <h4 id="discussion"><strong>Discussion</strong></h4>
 <p>  作者讨论了为什么不使用普通的softmax将多个proxies加权生成对应session的proxy。作者认为，对多个proxies的加权组合会为每个session创建一个独一无二的proxy,这相当于对session encoder 为representation。但是，只从单个session 中很难提取整体兴趣。因此不能保证加权结合能够对多个sessions中的公共整体兴趣建模。而ProxySR选择的是最有可能的一个proxy，因此选择的proxy能够在多个session之间共享，进而能捕捉这些sessions之间的共同信息。</p>
+<h3 id="short-term-interest-encoder"><strong>Short-term Interest Encoder</strong></h3>
+<p>session 中本身包含短期兴趣，因此直接将session encoder 为隐表示作为short-term interest <span class="math inline">\(s^{(s)}\)</span><br />
+<span class="math display">\[
+s^{(s)}=f^S(s)\tag{4}\label{eq4}
+\]</span> 其中<span class="math inline">\(f^S(s)\in\mathbb{R}^d\)</span>为encoder network。<span class="math inline">\(s^{(s)}\in\mathbb{R}^d\)</span> 为session <span class="math inline">\(s\)</span>包含的short-term interest的表示。</p>
+<h4 id="boldsymbolfss实现细节"><strong><span class="math inline">\(\boldsymbol{f^S(s)}\)</span>实现细节</strong></h4>
+<p>考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T \]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span class="math display">\[K=ReLU(XW^{S,(K)}) \]</span> <span class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span class="math display">\[Z=AX+X \]</span> <span class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span></p>
 
     </div>
 
@@ -332,7 +339,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methond"><span class="nav-number">2.</span> <span class="nav-text">Methond</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-selection"><span class="nav-number">2.1.</span> <span class="nav-text">Proxy Selection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#encoder-network"><span class="nav-number">2.1.1.</span> <span class="nav-text">encoder network</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#discussion"><span class="nav-number">2.1.2.</span> <span class="nav-text">Discussion</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methond"><span class="nav-number">2.</span> <span class="nav-text">Methond</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-selection"><span class="nav-number">2.1.</span> <span class="nav-text">Proxy Selection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfps%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.1.1.</span> <span class="nav-text">\(\boldsymbol{f^P(s)}\)实现细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#discussion"><span class="nav-number">2.1.2.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#short-term-interest-encoder"><span class="nav-number">2.2.</span> <span class="nav-text">Short-term Interest Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfss%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">\(\boldsymbol{f^S(s)}\)实现细节</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
