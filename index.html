@@ -156,6 +156,65 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/LaTex%E8%A1%A8%E8%BE%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="yogattt">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello World">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/26/LaTex%E8%A1%A8%E8%BE%BE/" class="post-title-link" itemprop="url">LaTex表达</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-11-26 16:39:01 / Modified: 16:45:11" itemprop="dateCreated datePublished" datetime="2021-11-26T16:39:01+08:00">2021-11-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>命令和在表达式的上、下方给出一水平的大括号 - <span class="math inline">\(\underbrace{a+b+c+...+z}_{26个字母}\)</span> ：$_{26个字母}$</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -187,7 +246,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 11:59:43" itemprop="dateModified" datetime="2021-11-26T11:59:43+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-26 16:43:31" itemprop="dateModified" datetime="2021-11-26T16:43:31+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -224,7 +283,10 @@
 </figure>
 <h3 id="proxy-selection"><strong>Proxy Selection</strong></h3>
 <p>  ProxySR首先通过输入的session <span class="math inline">\(s\)</span> 构建偏态概率分布，进而从预先定义的K个proxy embeddings选择一个proxy embedding。更具体地说，ProxySR利用encoder network生成概率的对数，然后通过用具有温度参数的softmax函数将其转换为偏态概率分布 <span class="math inline">\(\pi \in \mathbb{R}^K\)</span> ，如下所示：<br />
-<span class="math display">\[\boldsymbol\alpha=f^P(s)\]</span> <span class="math display">\[\boldsymbol{\pi_i}={exp(\boldsymbol{\alpha_i}/\tau)\over \sum_{j=1}^Kexp(\boldsymbol{\alpha_j}/\tau)} \ for\ i\in(1,2,...,K) \tag{1}\label{eq1}\]</span> 其中 <span class="math inline">\(f^P\in\mathbb{R}^K\)</span>是对于session <span class="math inline">\(s\)</span> 的 encoder network。𝐾 Proxy数量，<span class="math inline">\(\boldsymbol{\pi_i}\)</span>这是第i个Proxy的概率。<span class="math inline">\(\tau&gt;0\)</span>是温度参数。当<span class="math inline">\(\tau\)</span>越小，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个接近one-hot向量的分布。当<span class="math inline">\(\tau\)</span>越大，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个每个元素接近1/K的均匀分布。因此，作者将一个较大的初始值指定给𝜏 并随着训练的进行而减小，因为如果𝜏 很小，梯度会偏向于少数对数，这对于不稳定的初始训练是不可取的。</p>
+<span class="math display">\[\boldsymbol\alpha=f^P(s)\]</span> <span class="math display">\[\boldsymbol{\pi_i}={exp(\boldsymbol{\alpha_i}/\tau)\over \sum_{j=1}^Kexp(\boldsymbol{\alpha_j}/\tau)} \ for\ i\in(1,2,...,K) \tag{1}\label{eq1}\]</span> 其中 <span class="math inline">\(f^P\in\mathbb{R}^K\)</span>是对于session <span class="math inline">\(s\)</span> 的 encoder network。𝐾为Proxy数量，<span class="math inline">\(\boldsymbol{\pi_i}\)</span>是第i个Proxy的概率。<span class="math inline">\(\tau&gt;0\)</span>是温度参数。当<span class="math inline">\(\tau\)</span>越小，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个接近one-hot向量的分布。当<span class="math inline">\(\tau\)</span>越大，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个每个元素接近1/K的均匀分布。因此，作者将一个较大的初始值指定给𝜏 并随着训练的进行而减小，因为如果𝜏 很小，梯度会偏向于少数对数，这对于不稳定的初始训练是不可取的。最后获得session <span class="math inline">\(s\)</span>的proxy embedding <span class="math inline">\(p^{(s)}\)</span> <span class="math display">\[
+\gamma={\sum_{j=1}^K\Vert\boldsymbol{\pi_j}P_j\Vert_2\over \Vert\sum_{j=1}^K\boldsymbol{\pi_j}P_j\Vert_2}
+\]</span> $$ p^{(s)}=_{j=1}^kP_j</p>
+<p>$$</p>
 
       
     </div>
@@ -622,7 +684,7 @@ exp_{\theta_t}(\textbf{x})=cosh(\Vert\textbf{v}\Vert_{\mathcal{L}})\textbf{x}+si
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -635,7 +697,7 @@ exp_{\theta_t}(\textbf{x})=cosh(\Vert\textbf{v}\Vert_{\mathcal{L}})\textbf{x}+si
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

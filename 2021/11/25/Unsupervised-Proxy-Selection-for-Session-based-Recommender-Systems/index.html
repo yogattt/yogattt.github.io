@@ -30,7 +30,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure1.png">
 <meta property="article:published_time" content="2021-11-25T13:10:16.000Z">
-<meta property="article:modified_time" content="2021-11-26T03:59:43.121Z">
+<meta property="article:modified_time" content="2021-11-26T08:43:31.890Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="sigir">
 <meta property="article:tag" content="2021">
@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 11:59:43" itemprop="dateModified" datetime="2021-11-26T11:59:43+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-26 16:43:31" itemprop="dateModified" datetime="2021-11-26T16:43:31+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,10 @@
 </figure>
 <h3 id="proxy-selection"><strong>Proxy Selection</strong></h3>
 <p>  ProxySR首先通过输入的session <span class="math inline">\(s\)</span> 构建偏态概率分布，进而从预先定义的K个proxy embeddings选择一个proxy embedding。更具体地说，ProxySR利用encoder network生成概率的对数，然后通过用具有温度参数的softmax函数将其转换为偏态概率分布 <span class="math inline">\(\pi \in \mathbb{R}^K\)</span> ，如下所示：<br />
-<span class="math display">\[\boldsymbol\alpha=f^P(s)\]</span> <span class="math display">\[\boldsymbol{\pi_i}={exp(\boldsymbol{\alpha_i}/\tau)\over \sum_{j=1}^Kexp(\boldsymbol{\alpha_j}/\tau)} \ for\ i\in(1,2,...,K) \tag{1}\label{eq1}\]</span> 其中 <span class="math inline">\(f^P\in\mathbb{R}^K\)</span>是对于session <span class="math inline">\(s\)</span> 的 encoder network。𝐾 Proxy数量，<span class="math inline">\(\boldsymbol{\pi_i}\)</span>这是第i个Proxy的概率。<span class="math inline">\(\tau&gt;0\)</span>是温度参数。当<span class="math inline">\(\tau\)</span>越小，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个接近one-hot向量的分布。当<span class="math inline">\(\tau\)</span>越大，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个每个元素接近1/K的均匀分布。因此，作者将一个较大的初始值指定给𝜏 并随着训练的进行而减小，因为如果𝜏 很小，梯度会偏向于少数对数，这对于不稳定的初始训练是不可取的。</p>
+<span class="math display">\[\boldsymbol\alpha=f^P(s)\]</span> <span class="math display">\[\boldsymbol{\pi_i}={exp(\boldsymbol{\alpha_i}/\tau)\over \sum_{j=1}^Kexp(\boldsymbol{\alpha_j}/\tau)} \ for\ i\in(1,2,...,K) \tag{1}\label{eq1}\]</span> 其中 <span class="math inline">\(f^P\in\mathbb{R}^K\)</span>是对于session <span class="math inline">\(s\)</span> 的 encoder network。𝐾为Proxy数量，<span class="math inline">\(\boldsymbol{\pi_i}\)</span>是第i个Proxy的概率。<span class="math inline">\(\tau&gt;0\)</span>是温度参数。当<span class="math inline">\(\tau\)</span>越小，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个接近one-hot向量的分布。当<span class="math inline">\(\tau\)</span>越大，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个每个元素接近1/K的均匀分布。因此，作者将一个较大的初始值指定给𝜏 并随着训练的进行而减小，因为如果𝜏 很小，梯度会偏向于少数对数，这对于不稳定的初始训练是不可取的。最后获得session <span class="math inline">\(s\)</span>的proxy embedding <span class="math inline">\(p^{(s)}\)</span> <span class="math display">\[
+\gamma={\sum_{j=1}^K\Vert\boldsymbol{\pi_j}P_j\Vert_2\over \Vert\sum_{j=1}^K\boldsymbol{\pi_j}P_j\Vert_2}
+\]</span> $$ p^{(s)}=_{j=1}^kP_j</p>
+<p>$$</p>
 
     </div>
 
@@ -257,7 +260,10 @@
     <a href="/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/" rel="prev" title="Learning Feature Interactions with Lorentzian Factorization Machine">
       <i class="fa fa-chevron-left"></i> Learning Feature Interactions with Lorentzian Factorization Machine
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/26/LaTex%E8%A1%A8%E8%BE%BE/" rel="next" title="LaTex表达">
+      LaTex表达 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -332,7 +338,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -345,7 +351,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
