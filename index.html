@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 09:30:20" itemprop="dateModified" datetime="2021-11-26T09:30:20+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-26 11:38:45" itemprop="dateModified" datetime="2021-11-26T11:38:45+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -211,7 +211,25 @@
 
       
           <h2 id="摘要">摘要</h2>
-<p>由于Session-based Recommender Systems（SRS）中缺少用户相关信息，所以很难直接从数据中获得用户的整体兴趣。因此，现有的SRS侧重于如何在会话中有效地建模有关短期兴趣的信息，但它们不足以捕获用户的整体兴趣。</p>
+<p>   由于Session-based Recommender Systems（SRS）中缺少用户相关信息，所以很难直接从数据中获得用户的整体兴趣。因此，现有的SRS侧重于如何在会话中有效地建模有关短期兴趣的信息，但它们不足以捕获用户的整体兴趣。为此，作者提出了一个新的框架来克服SRS的局限性，名为ProxySR，它通过对会话代理进行建模来模拟SRS中缺失的信息（即用户的整体兴趣）。<br />
+   ProxySR以无监督的方式为输入的会话选择一个合适的proxy，将其与从该会话提取的短期兴趣结合，用于next item prediction。此外，作者还提出了SRS的另一种现实情况，即少数用户登录并在会话中留下他们的标识符，并针对这种情况修改了ProxySR。<br />
+   ProxySR模型设计的初衷来源于以下总体兴趣的特征：</p>
+<ul>
+<li>多个会话可能具有相似的用户总体兴趣（比如，这多个会话是由同一个用户创建的，且该用户具备稳定的总体兴趣）</li>
+<li>除了短期兴趣外，总体兴趣也可以弥补会话推荐中丢失的信息，以帮助预测下一个交互的item</li>
+</ul>
+<h2 id="methond">Methond</h2>
+<img src="figure1.png" title="fig:" alt="图1" />
+<center>
+图1 ProxySR的总体架构
+</center>
+<h3 id="proxy-selection"><strong>Proxy Selection</strong></h3>
+<p>  ProxySR首先通过输入的session <span class="math inline">\(s\)</span> 构建偏态概率分布，进而从预先定义的K个proxy embeddings选择一个proxy embedding。更具体地说，ProxySR利用encoder network生成概率的对数，然后通过用具有温度参数的softmax函数将其转换为偏态概率分布 <span class="math inline">\(\pi \in \mathbb{R}^K\)</span> ，如下所示： <span class="math display">\[
+\boldsymbol\alpha=f^P(s)
+\]</span></p>
+<p><span class="math display">\[
+\boldsymbol{\pi_i}={exp(\boldsymbol{\alpha_i}/\tau)\over \sum_{j=1}^Kexp(\boldsymbol{\alpha_j}/\tau)} \ for\ i\in(1,2,...,K) \tag{1}\label{e q1}
+\]</span> 其中 <span class="math inline">\(f^P\in\mathbb{R}^K\)</span>是对于session <span class="math inline">\(s\)</span> 的 encoder network。𝐾 Proxy数量，<span class="math inline">\(\boldsymbol{\pi_i}\)</span>这是第i个Proxy的概率。<span class="math inline">\(\tau&gt;0\)</span>是温度参数。当<span class="math inline">\(\tau\)</span>越小，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个接近one-hot向量的分布。当<span class="math inline">\(\tau\)</span>越大，<span class="math inline">\(\boldsymbol\pi\)</span>变成一个每个元素接近1/K的均匀分布。因此，作者将一个较大的初始值指定给𝜏 并随着训练的进行而减小，因为如果𝜏 很小，梯度会偏向于少数对数，这对于不稳定的初始训练是不可取的。</p>
 
       
     </div>
@@ -262,7 +280,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-19 01:27:38" itemprop="dateModified" datetime="2021-11-19T01:27:38+08:00">2021-11-19</time>
+                <time title="Modified: 2021-11-26 11:08:00" itemprop="dateModified" datetime="2021-11-26T11:08:00+08:00">2021-11-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -616,7 +634,7 @@ exp_{\theta_t}(\textbf{x})=cosh(\Vert\textbf{v}\Vert_{\mathcal{L}})\textbf{x}+si
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
