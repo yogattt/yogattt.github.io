@@ -35,8 +35,10 @@
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table4.png">
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table5.png">
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure3.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table6.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure4.png">
 <meta property="article:published_time" content="2021-11-25T13:10:16.000Z">
-<meta property="article:modified_time" content="2021-11-27T12:59:09.816Z">
+<meta property="article:modified_time" content="2021-11-27T14:41:28.738Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="sigir">
 <meta property="article:tag" content="2021">
@@ -202,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-27 20:59:09" itemprop="dateModified" datetime="2021-11-27T20:59:09+08:00">2021-11-27</time>
+                <time title="Modified: 2021-11-27 22:41:28" itemprop="dateModified" datetime="2021-11-27T22:41:28+08:00">2021-11-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -315,6 +317,24 @@ s^{(s)}=f^S(s)\tag{4}\label{eq4}
 <center>
 图2 Result of the hyperparameter parameter study on 𝐾 in ProxySR.
 </center>
+<h3 id="analyses-on-proxies-from-proxysr"><strong>Analyses on Proxies from ProxySR</strong></h3>
+<h4 id="information-encoded-in-proxies"><strong>Information Encoded in Proxies</strong></h4>
+<center>
+表6 Performance of HRNN with various types of the user information in it
+</center>
+<p><img src="table6.png" /><br />
+  HRNN通过user-level RNN，顺序使用用户会话来训练user embedding。</p>
+<h4 id="visualizations"><strong>Visualizations</strong></h4>
+使用t-分布领域嵌入（t-SNE）来可视化高维表示。图3展示了与10个随机用户相关的session表示可视化，相同颜色的圆圈表示该session属于同一个user。 <img src="figure4.png" alt="图3" /><br />
+
+<center>
+图3 Visualizations of several representations related to sessions
+</center>
+<p>从图3可以发现：</p>
+<ul>
+<li>有些proxy是由多个用户的会话选择的，这是因为多个用户可能有相似的一般兴趣（多种颜色聚集的一团）</li>
+<li>多个proxies被相同用户的session选择，说明proxy可以对比用户一般兴趣更细粒度的信息进行建模。（浅蓝色那一团）</li>
+</ul>
 
     </div>
 
@@ -400,7 +420,7 @@ s^{(s)}=f^S(s)\tag{4}\label{eq4}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methond"><span class="nav-number">2.</span> <span class="nav-text">Methond</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-selection"><span class="nav-number">2.1.</span> <span class="nav-text">Proxy Selection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfps%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.1.1.</span> <span class="nav-text">\(\boldsymbol{f^P(s)}\)实现细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#discussion"><span class="nav-number">2.1.2.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#short-term-interest-encoder"><span class="nav-number">2.2.</span> <span class="nav-text">Short-term Interest Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfss%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">\(\boldsymbol{f^S(s)}\)实现细节</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#combination"><span class="nav-number">2.3.</span> <span class="nav-text">Combination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#training"><span class="nav-number">2.4.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#another-real-world-case-user-semi-supervision"><span class="nav-number">2.5.</span> <span class="nav-text">Another Real-world Case: User Semi-supervision</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiments"><span class="nav-number">3.</span> <span class="nav-text">EXPERIMENTS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#datasets"><span class="nav-number">3.1.</span> <span class="nav-text">datasets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performance-comparison"><span class="nav-number">3.2.</span> <span class="nav-text">Performance Comparison</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.3.</span> <span class="nav-text">消融实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hyperparameter-study"><span class="nav-number">3.4.</span> <span class="nav-text">Hyperparameter Study</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methond"><span class="nav-number">2.</span> <span class="nav-text">Methond</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-selection"><span class="nav-number">2.1.</span> <span class="nav-text">Proxy Selection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfps%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.1.1.</span> <span class="nav-text">\(\boldsymbol{f^P(s)}\)实现细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#discussion"><span class="nav-number">2.1.2.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#short-term-interest-encoder"><span class="nav-number">2.2.</span> <span class="nav-text">Short-term Interest Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfss%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">\(\boldsymbol{f^S(s)}\)实现细节</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#combination"><span class="nav-number">2.3.</span> <span class="nav-text">Combination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#training"><span class="nav-number">2.4.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#another-real-world-case-user-semi-supervision"><span class="nav-number">2.5.</span> <span class="nav-text">Another Real-world Case: User Semi-supervision</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiments"><span class="nav-number">3.</span> <span class="nav-text">EXPERIMENTS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#datasets"><span class="nav-number">3.1.</span> <span class="nav-text">datasets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performance-comparison"><span class="nav-number">3.2.</span> <span class="nav-text">Performance Comparison</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.3.</span> <span class="nav-text">消融实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hyperparameter-study"><span class="nav-number">3.4.</span> <span class="nav-text">Hyperparameter Study</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#analyses-on-proxies-from-proxysr"><span class="nav-number">3.5.</span> <span class="nav-text">Analyses on Proxies from ProxySR</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#information-encoded-in-proxies"><span class="nav-number">3.5.1.</span> <span class="nav-text">Information Encoded in Proxies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#visualizations"><span class="nav-number">3.5.2.</span> <span class="nav-text">Visualizations</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
