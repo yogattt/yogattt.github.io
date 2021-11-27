@@ -249,7 +249,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 22:21:52" itemprop="dateModified" datetime="2021-11-26T22:21:52+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-27 20:59:09" itemprop="dateModified" datetime="2021-11-27T20:59:09+08:00">2021-11-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -310,12 +310,58 @@ s^{(s)}=f^S(s)\tag{4}\label{eq4}
 <h3 id="combination"><strong>Combination</strong></h3>
 <p>  该部分将为session s选择好的proxy <span class="math inline">\(p^{(s)}\)</span>和其短期兴趣<span class="math inline">\(s^(s)\)</span>结合到一起，获得会话s的最终表示，然后再用该表示计算该session和目标item i之间相异性得分。然而，根据一些先例研究，简单的加法不能模拟比一对一关系更复杂的三元组内的关系。</p>
 <ul>
-<li>情景1：如果同一个item与两个不同和短期兴趣、同一个selected proxy相关，那么模型可能会认为这两个不同的短期兴趣是相似的，即if <span class="math inline">\(p + s^{(1)} ≈ I_i\)</span> and <span class="math inline">\(p + s^{(2)} ≈ I𝑖\)</span> then $ s^{(1)} ≈ s^{(2)}$</li>
+<li>情景1：如果同一个item与两个不同和短期兴趣、同一个selected proxy相关，那么模型可能会认为这两个不同的短期兴趣是相似的，即if <span class="math inline">\(p + s^{(1)} ≈ I_i\)</span> and <span class="math inline">\(p + s^{(2)} ≈ I_𝑖\)</span> then $ s^{(1)} ≈ s^{(2)}$</li>
 <li>情景2：如果两个不同的item与同一个proxy相关，且分别与两个相似的短期兴趣相关，那么模型会认为这两个不同的item是相似的，即 if <span class="math inline">\(p + s^{(1)} ≈ I𝑖^{(1)}\)</span> and <span class="math inline">\(p + s^{(2)} ≈ I_i^{(2)}\)</span> where <span class="math inline">\(s^{(1)} ≈ s^{(2)}\)</span>, then <span class="math inline">\(I_i^{(1)} ≈ I_i^{(2)}\)</span></li>
 </ul>
 <p>因此，作者借鉴TransH的思想，将短期兴趣和目标item的embedding投影到超平面（hyperplane），以捕获三元组间复杂的关系。具体来说，首先获得投影到超平面的short-term interest <span class="math inline">\(s_\perp ^{(s)}\)</span>以及目标 item embedding <span class="math inline">\(I_{i\perp}\)</span> <span class="math display">\[
 \boldsymbol{v}={\sum_{j=1}^K\Vert\boldsymbol{\pi_j}V_j\Vert_2\over \Vert\sum_{j=1}^K\boldsymbol{\pi_j}V_j\Vert_2}
-\]</span> <span class="math display">\[s_\perp ^{(s)}=s^{(s)}-\boldsymbol{v}^Ts^{(s)}\boldsymbol{v}\]</span> <span class="math display">\[I_{i\perp}=I_i-\boldsymbol{v}^TI_i\boldsymbol{v}\]</span> <span class="math inline">\(V\in\mathbb{R}^{K\times d}\)</span> 是proxy hyperplane的单位法向量。<span class="math inline">\(\boldsymbol{v}\in\mathbb{R}^d\)</span>是投影到<span class="math inline">\(p^{(s)}\)</span>的超平面的单位法向量。</p>
+\]</span> <span class="math display">\[s_\perp ^{(s)}=s^{(s)}-\boldsymbol{v}^Ts^{(s)}\boldsymbol{v}\]</span> <span class="math display">\[I_{i\perp}=I_i-\boldsymbol{v}^TI_i\boldsymbol{v}\]</span> <span class="math inline">\(V\in\mathbb{R}^{K\times d}\)</span> 是proxy hyperplanes的单位法向量set。<span class="math inline">\(\boldsymbol{v}\in\mathbb{R}^d\)</span>是投影到<span class="math inline">\(p^{(s)}\)</span>的超平面的单位法向量。为了使法向量与proxy的超平面正交并具有单位长度，作者约束<span class="math inline">\(\lvert v\cdot p^{(s)}\rvert/\Vert p^{(s)}\Vert_2 \le \epsilon\)</span> , <span class="math inline">\(\Vert V_j\Vert_2=1\)</span><br />
+  最后，会话 𝑠 和目标item 𝑖 之间的相异性分数是通过预测的item embedding与proxy的聚合以及预测的短期兴趣之间的距离来估计的。计算相异性分数如下： <span class="math display">\[dist(s,i)=\left\Vert\left(p^{(s)}+s_\perp^{(s)}\right)-I_{i\perp}\right\Vert_2^2\tag{7}
+\]</span></p>
+<h3 id="training"><strong>Training</strong></h3>
+<p>  采用 marginal loss 训练模型。采用单位法向量 v 的正交正则器orthogonality regularizer和distance regularizer，强制会话表示接近目标item embbedng.<br />
+  首先定义损失函数<span class="math inline">\(\mathcal{L}\)</span> <span class="math display">\[\mathcal{L}=\sum_{\{s,i^+\}\in \boldsymbol S}\sum_{i^-\in NI(s)}[m+dist(s,i^+)-dist(s,i^-)]_+\tag{8}
+\]</span> <span class="math inline">\(i^+\)</span> 为session s的true next item, <span class="math inline">\(NI(s)\subset I\backslash i^+\)</span> 是session s 的 negative items 集。<span class="math inline">\([x]_+=max(x,0)\)</span>。𝑚 is the margin。<br />
+  包括正则化项，最终的最小化目标函数J定义为如下所示：<br />
+<span class="math display">\[reg^{dist}=\sum_{\{s,i^+\}\in \boldsymbol S}dist(s,t^+)\]</span> <span class="math display">\[reg^{orthog}=\sum_{\{s,i^+\}\in \boldsymbol S}{\rvert v^{(s)}\cdot p^{(s)}\rvert\over \Vert p^{(s)}\Vert_2}\]</span> <span class="math display">\[\mathcal{J}=\mathcal{L}+\lambda^{dist}\cdot reg^{dist}+\lambda^{orthog}\cdot reg^{orthog}\tag{9}\]</span></p>
+<h3 id="another-real-world-case-user-semi-supervision"><strong>Another Real-world Case: User Semi-supervision</strong></h3>
+<p>作者还考虑了当数据集中存在部分用户信息的时候，如何利用这些用户信息进行半监督学习。即在生成proxy的概率分布时加入user bias，对于缺少用户信息的session,仍按初始的方式计算proxy的概率<span class="math inline">\(\eqref{eq1}\)</span>： <span class="math display">\[\boldsymbol{\pi_i}^{user}={exp\left(\left(\boldsymbol{\alpha_i}+u_j^{(s)}\right)/\tau\right)\over \sum_{j=1}^Kexp\left(\left(\boldsymbol{\alpha_j}+u_j^{(s)}\right)/\tau\right)} \ for\ i\in(1,2,...,K) \tag{10}\label{eq10}\]</span><br />
+其中<span class="math inline">\(u^{(s)}\in\mathbb{R}^K\)</span> 是对于session s的用户可学习user bias。</p>
+<h2 id="experiments">EXPERIMENTS</h2>
+<h3 id="datasets"><strong>datasets</strong></h3>
+<center>
+表1 Statistics of datasets
+</center>
+<p><img src="table1.png" /></p>
+<p>实验包含两个任务：</p>
+<ul>
+<li>next unseen item recommendation</li>
+<li>next item recommendation with repetitive consumption.</li>
+</ul>
+<h3 id="performance-comparison"><strong>Performance Comparison</strong></h3>
+<center>
+表2 Overall performance on the next unseen item recommendation
+</center>
+<p><img src="table2.png" /></p>
+<center>
+表3 Overall performance on the next item recommendation with repetitive consumption
+</center>
+<p><img src="table3.png" /></p>
+<p>ProxySR与CSRM和GCE-GNN的比较证明，基于item co-occurrence的相邻会话的信息不足以捕获会话的一般兴趣。 ProxySR在短序列的数据集更有效。如在RetailRocket数据集上提升最大。在LastFM数据集上提升最小。</p>
+<center>
+表4 Performance of ProxySR in the real-world scenario where a few sessions have their user information
+</center>
+<p><img src="table4.png" /></p>
+<h3 id="消融实验"><strong>消融实验</strong></h3>
+<center>
+表5 Result of the ablation study on each component in ProxySR
+</center>
+<p><img src="table5.png" /></p>
+<h3 id="hyperparameter-study"><strong>Hyperparameter Study</strong></h3>
+<img src="figure3.png" title="fig:" alt="图2" />
+<center>
+图2 Result of the hyperparameter parameter study on 𝐾 in ProxySR.
+</center>
 
       
     </div>
@@ -366,7 +412,7 @@ s^{(s)}=f^S(s)\tag{4}\label{eq4}
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-26 11:08:00" itemprop="dateModified" datetime="2021-11-26T11:08:00+08:00">2021-11-26</time>
+                <time title="Modified: 2021-11-27 20:05:28" itemprop="dateModified" datetime="2021-11-27T20:05:28+08:00">2021-11-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -473,9 +519,7 @@ exp_{\theta_t}(\textbf{x})=cosh(\Vert\textbf{v}\Vert_{\mathcal{L}})\textbf{x}+si
 表2 每个模型在测试集上的最佳性能。
 </center>
 <p>从表2可发现， 除了MovieLens数据集，LorentzFM的效果比其他模型都好。原因是MovieLens的稀疏特征的数量是其他数据集的5到100倍，说明当数据非常稀疏时，LorentzFM功能尤其强大。</p>
-<figure>
-<img src="table3.jpg" alt="表3" /><figcaption aria-hidden="true">表3</figcaption>
-</figure>
+<img src="table3.jpg" title="fig:" alt="表3" />
 <center>
 表3 在最佳性能下，每个模型的训练参数数量与训练时间比较表。
 </center>
