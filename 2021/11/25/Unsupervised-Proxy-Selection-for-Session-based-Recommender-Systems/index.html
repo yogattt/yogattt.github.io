@@ -38,7 +38,7 @@
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table6.png">
 <meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure4.png">
 <meta property="article:published_time" content="2021-11-25T13:10:16.000Z">
-<meta property="article:modified_time" content="2021-11-27T14:44:43.802Z">
+<meta property="article:modified_time" content="2021-11-29T13:25:30.306Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="sigir">
 <meta property="article:tag" content="2021">
@@ -204,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-27 22:44:43" itemprop="dateModified" datetime="2021-11-27T22:44:43+08:00">2021-11-27</time>
+                <time title="Modified: 2021-11-29 21:25:30" itemprop="dateModified" datetime="2021-11-29T21:25:30+08:00">2021-11-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,7 +249,7 @@
   当<span class="math inline">\(\tau\)</span>在初始训练阶段较大时，获得的代理的规模可能太小，因为每个proxy都是以均值为 0 随机初始化的，并均匀聚合以相互抵消。因此，作者通过使用 <span class="math inline">\(\gamma\)</span> 重新缩放获得的proxy来防止这个问题，这迫使其 <span class="math inline">\(\mathcal{l}_2\)</span> 范数保持proxies的 <span class="math inline">\(\mathcal{l}_2\)</span>范数的加权平均值。</p>
 <h4 id="boldsymbolfps实现细节"><strong><span class="math inline">\(\boldsymbol{f^P(s)}\)</span>实现细节</strong></h4>
 <p>  encoder network如下<br />
-<span class="math display">\[f^P(s)={i\over n} \sum_{j=1}^nW^{P,(2)^T}\sigma\left(W^{P,(1)^T}\left(I_{s_j}+E_j^P\right)\right)\tag{3}\label{eq3}\]</span><br />
+<span class="math display">\[f^P(s)={1\over n} \sum_{j=1}^nW^{P,(2)^T}\sigma\left(W^{P,(1)^T}\left(I_{s_j}+E_j^P\right)\right)\tag{3}\label{eq3}\]</span><br />
 其中，<span class="math inline">\(I_{s_j}\)</span>是session <span class="math inline">\(s\)</span>中第j个item的embedding。<span class="math inline">\(E_j^P\)</span>是对于位置j的learnable positional embedding。<span class="math inline">\(W^{P,(1)^T}\in\mathbb{R}^{d\times\lfloor (d+K)/2\rfloor }\)</span>,<span class="math inline">\(W^{P,(2)^T}\in\mathbb{R}^{\lfloor (d+K)/2\rfloor \times K }\)</span> 为权重矩阵。<span class="math inline">\(\sigma\)</span>为负斜率为0.1的Leaky ReLU。<br />
   注意,在训练阶段，作者使用了全部的session item来选择proxy，而在预测next item <span class="math inline">\(s_t\)</span>时只使用了<span class="math inline">\([s_1,s_2,...s_{t-1}]\)</span></p>
 <h4 id="discussion"><strong>Discussion</strong></h4>
