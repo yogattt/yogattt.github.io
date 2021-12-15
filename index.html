@@ -181,7 +181,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-12-15 16:29:27 / Modified: 21:42:27" itemprop="dateCreated datePublished" datetime="2021-12-15T16:29:27+08:00">2021-12-15</time>
+              <time title="Created: 2021-12-15 16:29:27 / Modified: 22:12:06" itemprop="dateCreated datePublished" datetime="2021-12-15T16:29:27+08:00">2021-12-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -221,7 +221,10 @@
 <h3 id="contrastive-loss"><strong>Contrastive Loss</strong></h3>
 <p>Noise Contrastive Estimation (NCE) 是一种分类目标，可以区分真实样本和噪声样本。NCE 损失可以直接应用于项目预测任务。 在 MMInfoRec 中，作者将此损失扩展到多实例变体，可以有效缓解训练信号稀疏的问题。</p>
 <p>1）<strong>Vanilla NCE Loss</strong>：vanilla NCE 主要对潜在空间中的表示进行比较，以迫使预测表示 <span class="math inline">\(\hat {\mathbf z }\)</span> 接近真实表示 <span class="math inline">\(\mathbf z\)</span> <span class="math display">\[\mathcal{L}_{NCE}=-\sum_t\left[log { e^{\left(\hat{\mathbf z}_t^T\cdot \mathbf z_t\right)/\tau}\over e^{\left(\hat{\mathbf z}_t^T\cdot \mathbf z_t\right)/\tau}+\sum_{*\in\mathcal{N}_i}e\left(\hat{\mathbf z}_t^T\cdot \mathbf z_*\right)}\right]\]</span> 其中 <span class="math inline">\(\tau\)</span> 为温度参数，<span class="math inline">\(\mathcal{N}_i\)</span> 是时间为t的item的负样本集。本质上 <span class="math inline">\(\mathcal{L}_{NCE}\)</span> 是一个正样本对和其他所有负样本对之间的交叉熵损失</p>
-<p>2）<strong>Negative Sampling within Bath</strong>:因为训练时需要负样本集，因此需要负样本集的采样过程。一般有两种抽样方法：memory bank and batch sampling。在 MMInfoRec 中，NCE 的计算在一个batch内进行，而不是在整个项目集中进行抽样，因为一个batch将包含足够的负样本。 在计算机视觉任务的 CPC 方法中，负样本可以从同一个特征图的通道中选择，也可以从同一批的其他特征图中选择。 类似地，在顺序推荐中，可以使用batch中其他物品的特征向量 <span class="math inline">\(\mathbf{z}\)</span> 为每个物品i构造负样本集 <span class="math inline">\(\mathcal{N}_i\)</span>。</p>
+<p>2）<strong>Negative Sampling within Bath</strong>:因为训练时需要负样本集，因此需要负样本集的采样过程。一般有两种抽样方法：memory bank and batch sampling。在 MMInfoRec 中，NCE 的计算在一个batch内进行，而不是在整个项目集中进行抽样，因为一个batch将包含足够的负样本。 在计算机视觉任务的 CPC 方法中，负样本可以从同一个特征图的通道中选择，也可以从同一批的其他特征图中选择。 类似地，在顺序推荐中，可以使用batch中其他物品的特征向量 <span class="math inline">\(\mathbf{z}\)</span> 为每个物品i构造负样本集 <span class="math inline">\(\mathcal{N}_i\)</span>。<br />
+  如图一右边所示：定义General negatives为同一bath中但不属于该序列的负样本，Temporal negatives为同一序列中的负样本，模型更难区分。因为这些item和正样本在一个序列中，更倾向于代表用户的过时和误导性的偏好。所以把它们作为负样本训练模型是非常重要的，能够使模型区分差异.</p>
+<p>3）<strong>Multiple Instance Positive Sampling</strong>：对于预测的潜在表示 <span class="math inline">\(\hat{\bf z}_t\)</span> 最自然的正样例对就是选择相应时间的真实潜在向量<span class="math inline">\((\hat{\bf z}_t,\bf z_t)\)</span> 在本节，作者将这种正采样策略扩展到多实例方案。<br />
+  将vanilla NCE 从单正样本扩展到语义正样本的多个实例，主要的难点是识别真实正样本的语义相关正样本。因为序列推荐通常将下一物item作为预测的标签，因此在NCE中一般很难像多个正样本那样找出语义相似的items.这种困难主要是由于基本无法定义序列的语义相似性，通常依赖于序列级别的最近邻计数。与计算机视觉研究领域的数据样本（例如图像和视频）不同，没有广泛适用的增强方法用于item的嵌入表示以获得语义正样本，也没有有意义的标签以监督学习的方式挖掘语义正样本。</p>
 
       
     </div>
