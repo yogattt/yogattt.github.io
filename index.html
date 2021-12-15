@@ -181,7 +181,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-12-15 16:29:27 / Modified: 20:35:57" itemprop="dateCreated datePublished" datetime="2021-12-15T16:29:27+08:00">2021-12-15</time>
+              <time title="Created: 2021-12-15 16:29:27 / Modified: 20:39:16" itemprop="dateCreated datePublished" datetime="2021-12-15T16:29:27+08:00">2021-12-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,7 +215,8 @@
 <p>1）<strong>Embedding Layyer</strong>：通过两个emdedding 矩阵：an item embedding matrix <span class="math inline">\(\boldsymbol {Emb_i}\in \mathbb{R}^{\rvert \mathcal{I} \rvert \times d}\)</span>,an attribute embedding matrix <span class="math inline">\(\boldsymbol {Emb_A}\in \mathbb{R}^{\rvert \mathcal{A} \rvert \times d}\)</span>。(其中 <span class="math inline">\(\rvert \mathcal{I} \rvert\)</span> 为item的数量，<span class="math inline">\(\rvert \mathcal{A} \rvert\)</span> 为数据集合中出现的item的属性的数量)将IDs和 attributes 转换为密集向量。 例如，物品 <span class="math inline">\(I_n\)</span> 及其属性<span class="math inline">\(\{ a_1,a_2\}\)</span>,通过lookup操作获得向量: <span class="math inline">\(\bf x_n= \boldsymbol {Emb_i}(i_n)\)</span>,<span class="math inline">\(\boldsymbol a_1= \boldsymbol {Emb_A}(a_1)\)</span>,<span class="math inline">\(\boldsymbol a_2= \boldsymbol {Emb_A}(a_2)\)</span></p>
 <p>2）<strong>Attribute Encoder</strong> :旨在将项目的所有信息（包括 ID 信息和属性信息）融合为潜在表示 $_{enc}$的实现，简单的mean,或AutoInt,或item embedding到所有attribute embedding 的self attention 都适用于这个结构。</p>
 <p>3）<strong>Temporal aggegation</strong>:时间聚合函数<span class="math inline">\(\it g_{ta}\)</span>用于聚合在某个特定时间之前的item Temporal 信息,得到context　vector。 <span class="math display">\[ \bf c_t = \it g_{ta}(\bf z_1,\bf z_2,...,\bf z_t)\]</span> 其中$_t^{1d} $。可选择GRU或Attention作为时间聚合函数。</p>
-<p>4）<strong>Memory Module</strong>:增强模型的表示能力，作者设计了一个记忆模块，根据context vector计算每一步的预测输出。记忆模块中有一个带有b个内存条的内存库$<em>t<span class="math inline">\(,那么预测的潜在表示\)</span></em>{t+*}<span class="math inline">\(预计与\)</span><em>t<span class="math inline">\(有很强的语义相似性。因此，我们引入自回归预测函数\)</span></em>{ap}$ <span class="math display">\[\bf c_{t+1}=\it g_{ap}(\hat{\bf z}_{t+1}),\ \ \hat{\bf z}_{t+2} = \it g_m(\bf c_{t+1})\]</span> 其中<span class="math inline">\(\bf c_{t+1}\)</span>是时间步骤1到t+1的上下文摘要，<span class="math inline">\(\hat{\bf z}_{t+2}\)</span>是时间步骤 t + 2 的预测特征</p>
+<p>4）<strong>Memory Module</strong>:增强模型的表示能力，作者设计了一个记忆模块，根据context vector计算每一步的预测输出。记忆模块中有一个带有b个内存条的内存库<span class="math inline">\(\bf M\in\mathbb{R}^{b \times d}\)</span> 内存寻址操作定义如下: <span class="math display">\[\hat {\bf z}_{t+1} = \it g_m(\bf c_t), \]</span> <span class="math display">\[=Softmax(MLP(\bf c_t)) \cdot\bf M + \bf c_t,\]</span> 残差旨在保留原始预测并改进训练中的梯度流。</p>
+<p>5）<strong>Auto-regressive Prediction</strong>:对于多步预测任务，如果上下文被编码为向量 <span class="math inline">\(\bf c_t\)</span> ,那么预测的潜在表示 <span class="math inline">\(\hat{\bf z}_{t+*}\)</span> 预计与 <span class="math inline">\(\bf c_t\)</span> 有很强的语义相似性。因此，我们引入自回归预测函数<span class="math inline">\(\it g_{ap}\)</span> <span class="math display">\[\bf c_{t+1}=\it g_{ap}(\hat{\bf z}_{t+1}),\ \ \hat{\bf z}_{t+2} = \it g_m(\bf c_{t+1})\]</span> 其中<span class="math inline">\(\bf c_{t+1}\)</span>是时间步骤1到t+1的上下文摘要，<span class="math inline">\(\hat{\bf z}_{t+2}\)</span>是时间步骤 t + 2 的预测特征</p>
 
       
     </div>
