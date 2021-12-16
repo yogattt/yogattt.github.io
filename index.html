@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-16 16:05:32" itemprop="dateModified" datetime="2021-12-16T16:05:32+08:00">2021-12-16</time>
+                <time title="Modified: 2021-12-16 16:13:16" itemprop="dateModified" datetime="2021-12-16T16:13:16+08:00">2021-12-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -211,11 +211,12 @@
 
       
           <h2 id="abstract">Abstract</h2>
-<p>  目前大多数序列推荐模型将下一个item预测任务作为训练信号。对于这些方法，有两个至关重要的挑战 1）难以捕捉用户的长期偏好。2）监督信号过于稀疏而无法有效训练模型。因此作者提出了一个名为MMInfoRec,基于记忆增强的多实例对比预测编码方案的框架来克服这些挑战。基本对比预测编码（Contrastive Predictive Code CPC）作为序列和item的编码器（encoder）.记忆模块旨在增强CPC中的自回归预测，以实现灵活和整体上（general）的偏好编码表示,从而提高捕获长期偏好的能力。为了有效训练MMInfoRec,作者提出了一个新颖的多实例噪声对比估计损失（muti-instance noise constrastive estimation MINCE）.该损失通过使用多个正样本来有效利用mini-batch内的样本。作者提出的框架属于对比学习类型。然而，鉴于其对比训练任务与目标推荐任务很好地对齐，因此不需要进一步地微调步骤。通过对四个基准数据集的大量实验，MMInfoRec 可以胜过最先进的基线。</p>
+<p>  目前大多数序列推荐模型将下一个item预测任务作为训练信号。对于这些方法，有两个至关重要的挑战 1）难以捕捉用户的长期偏好。2）监督信号过于稀疏而无法有效训练模型。因此作者提出了一个名为MMInfoRec,基于记忆增强的多实例对比预测编码方案的框架来克服这些挑战。对比预测编码（Contrastive Predictive Code CPC）作为序列和item的编码器（encoder）.记忆模块旨在增强CPC中的自回归预测，以实现灵活和整体上（general）的偏好编码表示,从而提高捕获长期偏好的能力。为了有效训练MMInfoRec,作者提出了一个新颖的多实例噪声对比估计损失（muti-instance noise constrastive estimation MINCE）.该损失通过使用多个正样本来有效利用mini-batch内的样本。作者提出的框架属于对比学习类型。然而，鉴于其对比训练任务与目标推荐任务很好地对齐，因此不需要进一步地微调步骤。通过对四个基准数据集的大量实验，MMInfoRec 可以胜过最先进的基线。</p>
 <h2 id="method">Method</h2>
-<figure>
-<img src="figure1_overview.png" alt="图1：Overview of MMInfoRec" /><figcaption aria-hidden="true">图1：Overview of MMInfoRec</figcaption>
-</figure>
+<p><img src="figure1_overview.png" /></p>
+<center>
+图1：Overview of MMInfoRec
+</center>
 <h3 id="learning-framework"><strong>Learning Framework</strong></h3>
 <p>  MMInfoRec的整体架构如图1所示。首先将序列中的所有item的id和attributes分别由两个嵌入层转换为密集特征向量。对于每一个item,它的特征由属性编码器 <span class="math inline">\(g_{enc}\)</span> 编码为潜在表示 <span class="math inline">\(\boldsymbol z\)</span>。时间聚合模块(Temporal aggegation) <span class="math inline">\(g_{ta}\)</span> 将序列信息编码为<span class="math inline">\(\boldsymbol c_t\)</span>。通过自回归预测模块<span class="math inline">\(g_{ap}\)</span>，<span class="math inline">\(\boldsymbol c_t\)</span> 可用于预测未来的潜在表示。</p>
 <p>1）<strong>Embedding Layyer</strong>：通过两个emdedding 矩阵：an item embedding matrix <span class="math inline">\(\boldsymbol {Emb_i}\in \mathbb{R}^{\rvert \mathcal{I} \rvert \times d}\)</span>,an attribute embedding matrix <span class="math inline">\(\boldsymbol {Emb_A}\in \mathbb{R}^{\rvert \mathcal{A} \rvert \times d}\)</span>。(其中 <span class="math inline">\(\rvert \mathcal{I} \rvert\)</span> 为item的数量，<span class="math inline">\(\rvert \mathcal{A} \rvert\)</span> 为数据集合中出现的item的属性的数量)将IDs和 attributes 转换为密集向量。 例如，物品 <span class="math inline">\(I_n\)</span> 及其属性<span class="math inline">\(\{ a_1,a_2\}\)</span>,通过lookup操作获得向量: <span class="math inline">\(\mathbf x_n= \boldsymbol {Emb_i}(i_n)\)</span>,<span class="math inline">\(\boldsymbol a_1= \boldsymbol {Emb_A}(a_1)\)</span>,<span class="math inline">\(\boldsymbol a_2= \boldsymbol {Emb_A}(a_2)\)</span></p>
@@ -223,7 +224,7 @@
 <p>3）<strong>Temporal aggegation</strong>:时间聚合函数<span class="math inline">\(\it g_{ta}\)</span>用于聚合在某个特定时间之前的item Temporal 信息,得到context　vector。 <span class="math display">\[ \mathbf c_t = \it g_{ta}(\mathbf z_1,\mathbf z_2,...,\mathbf z_t)\tag{2}\]</span> 其中<span class="math inline">\(\mathbf c_t\in\mathbb{R}^{1\times d}\)</span>。可选择GRU或Attention作为时间聚合函数。作者使用Transformer。同时，作者将学习到的位置编码层添加到 <span class="math inline">\(\it g_{ta}\)</span> 的输入中。</p>
 <p>4）<strong>Memory Module</strong>:增强模型的表示能力，作者设计了一个记忆模块，根据context vector计算每一步的预测输出。记忆模块中有一个带有b个内存条的内存库 <span class="math inline">\(\mathbf M\in\mathbb{R}^{b \times d}\)</span> 内存寻址操作定义如下: <span class="math display">\[\hat {\mathbf z}_{t+1} = \it g_m(\mathbf c_t) \]</span> <span class="math display">\[=Softmax(MLP(\mathbf c_t)) \cdot\mathbf M + \mathbf c_t \tag{3}\label{eq3}\]</span> 残差旨在保留原始预测并改进训练中的梯度流。</p>
 <p>5）<strong>Auto-regressive Prediction</strong>:对于多步预测任务，如果上下文被编码为向量 <span class="math inline">\(\mathbf c_t\)</span> ,那么预测的潜在表示 <span class="math inline">\(\hat{\mathbf z}_{t+*}\)</span> 预计与 <span class="math inline">\(\mathbf c_t\)</span> 有很强的语义相似性。因此，我们引入自回归预测函数<span class="math inline">\(\it g_{ap}\)</span> <span class="math display">\[\mathbf c_{t+1}=\it g_{ap}(\hat{\mathbf z}_{t+1}),\ \ \hat{\mathbf z}_{t+2} = \it g_m(\mathbf c_{t+1}) \tag{4}\]</span> 其中 <span class="math inline">\(\mathbf c_{t+1}\)</span> 是时间步骤1到t+1的上下文摘要， <span class="math inline">\(\hat{\mathbf z}_{t+2}\)</span> 是时间步骤 t + 2 的预测特征。类似于 Seq2Seq 预测风潜在表示以顺序方式一一预测。作者使用了GUR模型。</p>
-<p>6）<strong>Recommendation</strong>:在MMInfoRec的验证和测试过程中，推荐是在序列表示 <span class="math inline">\(\mathbf c_t\)</span> 和项目集中所有项目之间的分的得分排序下进行的。 分数是通过当前时间步长 t 的序列表示 <span class="math inline">\(\mathbf c_t\)</span> 与项目集中所有项目的潜在表示 <span class="math inline">\(\mathbf{z}\)</span> 之间的点积计算得出的。</p>
+<p>6）<strong>Recommendation</strong>:在MMInfoRec的验证和测试过程中，推荐是在序列表示 <span class="math inline">\(\mathbf c_t\)</span> 和项目集中所有项目之间的得分排序下进行的。 分数是通过当前时间步长 t 的序列表示 <span class="math inline">\(\mathbf c_t\)</span> 与项目集中所有项目的潜在表示 <span class="math inline">\(\mathbf{z}\)</span> 之间的点积计算得出的。</p>
 <h3 id="contrastive-loss"><strong>Contrastive Loss</strong></h3>
 <p>Noise Contrastive Estimation (NCE) 是一种分类目标，可以区分真实样本和噪声样本。NCE 损失可以直接应用于项目预测任务。 在 MMInfoRec 中，作者将此损失扩展到多实例变体，可以有效缓解训练信号稀疏的问题。</p>
 <p>1）<strong>Vanilla NCE Loss</strong>：vanilla NCE 主要对潜在空间中的表示进行比较，以迫使预测表示 <span class="math inline">\(\hat {\mathbf z }\)</span> 接近真实表示 <span class="math inline">\(\mathbf z\)</span> <span class="math display">\[\mathcal{L}_{NCE}=-\sum_t\left[log { e^{\left(\hat{\mathbf z}_t^T\cdot \mathbf z_t\right)/\tau}\over e^{\left(\hat{\mathbf z}_t^T\cdot \mathbf z_t\right)/\tau}+\sum_{*\in\mathcal{N}_i}e\left(\hat{\mathbf z}_t^T\cdot \mathbf z_*\right)}\right]\tag{5}\label{eq5}\]</span> 其中 <span class="math inline">\(\tau\)</span> 为温度参数，<span class="math inline">\(\mathcal{N}_i\)</span> 是时间为t的item的负样本集。本质上 <span class="math inline">\(\mathcal{L}_{NCE}\)</span> 是一个正样本对和其他所有负样本对之间的交叉熵损失</p>
