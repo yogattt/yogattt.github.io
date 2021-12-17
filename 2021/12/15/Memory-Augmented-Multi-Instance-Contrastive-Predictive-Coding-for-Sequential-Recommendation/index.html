@@ -39,7 +39,7 @@
 <meta property="og:image" content="http://example.com/2021/12/15/Memory-Augmented-Multi-Instance-Contrastive-Predictive-Coding-for-Sequential-Recommendation/figure6.png">
 <meta property="og:image" content="http://example.com/2021/12/15/Memory-Augmented-Multi-Instance-Contrastive-Predictive-Coding-for-Sequential-Recommendation/figure7.png">
 <meta property="article:published_time" content="2021-12-15T08:29:27.000Z">
-<meta property="article:modified_time" content="2021-12-17T13:23:18.183Z">
+<meta property="article:modified_time" content="2021-12-17T13:24:32.606Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="2021">
 <meta property="article:tag" content="ICDM">
@@ -206,7 +206,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-17 21:23:18" itemprop="dateModified" datetime="2021-12-17T21:23:18+08:00">2021-12-17</time>
+                <time title="Modified: 2021-12-17 21:24:32" itemprop="dateModified" datetime="2021-12-17T21:24:32+08:00">2021-12-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,7 +264,8 @@
 表1：Statistics of the datasets after preprocessing
 </center>
 <p><img src="table1.png" /></p>
-<p>3）<strong>Hyper-Parameter</strong>   embedding size 设置为64，MMInfoRec中所有的线性映射函数都具有相同的隐藏大小。Transformer中层数设置为1，head设置为2。<span class="math inline">\(\it g_{ta}\)</span> 的输入和 <span class="math inline">\(\it g_{ta}\)</span> 内部的Transforme模块都使用ratio为0.5的Dropout函数，以缓解过拟合。batch size设置为256。采用学习率分别为{0.0003，0.001，0.003,0.01,0.003}的Adam作为优化器。内存槽数量 <span class="math inline">\(b\)</span> 从{5，10，32，64，128，256}中选择。预测步数从 {1, 2, 3, 4} 中选择。用于多实例的Dropout functions数量从{1，2，3，4}选择。温度参数从{0.1,0.3,0.6,1.3}。作者使用了 <span class="math inline">\(\mathcal{l}_2\)</span> 正则项用于训练。权重从{0，0.1，0.01，0.001，0.0001，0.00001}中选择。</p>
+<p>3）<strong>Hyper-Parameter</strong></p>
+<p>  embedding size 设置为64，MMInfoRec中所有的线性映射函数都具有相同的隐藏大小。Transformer中层数设置为1，head设置为2。<span class="math inline">\(\it g_{ta}\)</span> 的输入和 <span class="math inline">\(\it g_{ta}\)</span> 内部的Transforme模块都使用ratio为0.5的Dropout函数，以缓解过拟合。batch size设置为256。采用学习率分别为{0.0003，0.001，0.003,0.01,0.003}的Adam作为优化器。内存槽数量 <span class="math inline">\(b\)</span> 从{5，10，32，64，128，256}中选择。预测步数从 {1, 2, 3, 4} 中选择。用于多实例的Dropout functions数量从{1，2，3，4}选择。温度参数从{0.1,0.3,0.6,1.3}。作者使用了 <span class="math inline">\(\mathcal{l}_2\)</span> 正则项用于训练。权重从{0，0.1，0.01，0.001，0.0001，0.00001}中选择。</p>
 <h3 id="overall-performance"><strong>Overall Performance</strong></h3>
 <center>
 表2：Overall performance
