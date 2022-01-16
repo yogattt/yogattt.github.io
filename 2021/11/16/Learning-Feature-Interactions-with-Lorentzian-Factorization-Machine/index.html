@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要     学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互,但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。    作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）中的特征相互作用，在双曲空间中，Lo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning Feature Interactions with Lorentzian Factorization Machine">
+<meta property="og:url" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/index.html">
+<meta property="og:site_name" content="Hello World">
+<meta property="og:description" content="摘要     学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互,但是这些方法需要大量与low-level representations相结合的训练参数，因此内存和计算效率都很低。    作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic space）中的特征相互作用，在双曲空间中，Lo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/triangle.png">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/2D.jpg">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/pic3.jpg">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/table1.jpg">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/table2.jpg">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/table3.jpg">
+<meta property="og:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/figure5.jpg">
+<meta property="article:published_time" content="2021-11-16T09:02:14.000Z">
+<meta property="article:modified_time" content="2022-01-16T02:55:47.360Z">
+<meta property="article:author" content="yogattt">
+<meta property="article:tag" content="AAAI">
+<meta property="article:tag" content="2020">
+<meta property="article:tag" content="FM">
+<meta property="article:tag" content="CTR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/triangle.png">
+
+<link rel="canonical" href="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Learning Feature Interactions with Lorentzian Factorization Machine | Hello World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="yogattt">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Learning Feature Interactions with Lorentzian Factorization Machine
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-16 17:02:14" itemprop="dateCreated datePublished" datetime="2021-11-16T17:02:14+08:00">2021-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-16 10:55:47" itemprop="dateModified" datetime="2022-01-16T10:55:47+08:00">2022-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="摘要">摘要</h2>
+<p>   
+学习特征交互的表示以模拟用户行为对于推荐系统和点击率（CTR）预测至关重要。深度学习方法能够学习复杂的特征交互,但是这些方法需要大量与low-level
+representations相结合的训练参数，因此内存和计算效率都很低。</p>
+<p> 
+ 作者提出了一个名为“LorentzFM”的新模型，该模型可以学习嵌入在双曲空间（hyperbolic
+space）中的特征相互作用，在双曲空间中，Lorentz距离的三角不等式的破坏是可实现的。双曲三角形的特殊几何特性对学习特征交互的表示是有益的。并且因为不需要任何顶部深度学习层，参数数量显著减少（20%至80%）。</p>
+<p>  作者提出在使用Lorentz距离的双曲空间中学习低维表示，这样就能违反特征向量的三角不等式。该想法是受collaborative
+metric learning (CML) (Hsieh et al. 2017)
+工作的启发。不同的是，CML作者认为欧氏空间中的三角形不等式应该严格遵守，本文作者提出利用三角形不等式的符号。具体地说，本文作者不是通过特征向量之间的内积或距离，而是通过检查它们在双曲空间中形成的三角形来构造特征交互的分数函数。采取这种做法的原因有两个方面：<br />
+    1.双曲空间本质上比欧几里德空间更广阔；<br />
+    2.提出的分数函数将提供一个鲁棒的目标函数来学习细粒度特征交互。</p>
+<h2 id="技术背景">技术背景</h2>
+<h3 id="双曲几何hyperbolic-geometry"><strong>双曲几何(Hyperbolic
+Geometry)</strong></h3>
+<p><a
+target="_blank" rel="noopener" href="https://www.cnblogs.com/baiting/p/11006331.html">推荐阅读</a><br />
+  
+双曲几何旨在研究具有常数负曲率的非欧几里德空间。由于其负曲率，双曲几何与欧几里德几何相比具有非常不同的性质。<br />
+  
+首先，与欧几里德空间中的线性和二次增长率相反，双曲空间中圆的周长和面积随半径呈指数增长。因此，在半径上界相同的双曲空间中嵌入的容量比欧几里德空间中嵌入的容量大得多。其次，定义在洛伦兹距离下的三角不等式是可以违反。这个性质使我们能够用不等式的符号来刻画双曲空间中点之间的成对关系。（双曲空间有几个重要的计算模型：
+the Poincare ball model, the hyper-boloid model, the Klein model）<br />
+<strong>Hyperboloid Model</strong><br />
+  定义 <span class="math inline">\(\textbf{u},\textbf{v}\in
+\mathbb{R}^{n+1}\)</span> 之间的洛伦兹内积如下：<br />
+<span class="math display">\[\langle \textbf{u},\textbf{v}
+\rangle_{\mathcal{L}} = -u_0v_0+\sum_{i=1}^nu_iv_i\tag{1} \label{eq1}
+\]</span>   n维双曲面 <span
+class="math inline">\(H^{n,\beta}\subseteq\mathbb{R}^{n+1}\)</span>由以下定义的点集组成：</p>
+<p><span class="math display">\[H^{n,\beta}=\lbrace\textbf{x}\in
+\mathbb{R}^{n+1}:\Vert \textbf{x}
+\Vert_{\mathcal{L}}^2=-\beta,x_0&gt;\beta \rbrace \tag{2}
+\label{eq2}\]</span></p>
+<p>  <span class="math inline">\(\Vert \textbf{x}
+\Vert_{\mathcal{L}}^2=\langle \textbf{x},\textbf{x}
+\rangle_{\mathcal{L}}\)</span>
+表示向量X的洛伦兹范数。在此定义下，每个向量 <span
+class="math inline">\(\textbf{x}\in H^{n,\beta}\)</span> 的第0维度 <span
+class="math inline">\(x_0\)</span> 不能随意指定，应由以下公式定义：
+<span class="math display">\[x_0=\sqrt{\beta+\sum_{i=1}^n x_i}\tag{3}
+\label{eq3}\]</span>   两点之间的相关测地距离为:<br />
+<span class="math display">\[d_l(
+\textbf{u},\textbf{v})=arccosh(-\langle\textbf{u},\textbf{v}\rangle_{\mathcal{L}})
+\tag{4}\label{eq4}\]</span><br />
+  请注意，双曲面模型 <span class="math inline">\(H^{n,\beta}\)</span>
+的原点向量为 <span
+class="math inline">\(\boldsymbol{0}=(\beta,0,...,0)\)</span> 并且 <span
+class="math inline">\(\boldsymbol{0}\)</span> 与任意向量 <span
+class="math inline">\(\textbf{x}\in \mathbb{R}^{n+1}\)</span>
+的洛伦兹内积定义为 <span
+class="math inline">\(\langle\textbf{0},\textbf{x}\rangle=-x_0&lt;\beta\)</span>.这里原点向量的定义和原点向量与其他向量的内积应该是特殊定义，因为它们分别不满足等式
+<span class="math inline">\(\eqref{eq2}\)</span> 和 <span
+class="math inline">\(\eqref{eq1}\)</span><br />
+  当 <span
+class="math inline">\(\beta=1\)</span>时，该模型称为单位双曲面模型（unit
+Hyperboloid Model）。这将贯穿整个论文，并且将 <span
+class="math inline">\(H^{n,1}\)</span> 简记为 <span
+class="math inline">\(H^{n}\)</span>。</p>
+<p><strong>Lorentz Distance</strong><br />
+  <span class="math inline">\(\textbf{u}\)</span> , <span
+class="math inline">\(\textbf{v} \in H^n\)</span>
+之间的平方洛伦兹距离（简称洛伦兹距离）定义如下：<br />
+<span
+class="math display">\[d_{\mathcal{L}}^2(\textbf{u},\textbf{v})=\Vert
+\textbf{u}-\textbf{v}\Vert_{\mathcal{L}}^2=-2-2\langle\textbf{u},\textbf{v}\rangle_{\mathcal{L}}\tag{5}\label{eq5}\]</span><br />
+  它几乎满足欧几里得几何的所有公理，但是不满足三角不等式。三角不等式是正定黎曼度量的最关键几何性质之一，它表明对于任意三个点
+<span class="math inline">\(\textbf{x}\)</span>,<span
+class="math inline">\(\textbf{y}\)</span>,<span
+class="math inline">\(\textbf{z}\)</span>，任意两对点之间的距离<span
+class="math inline">\(d(.,.)\)</span>的和大于或等于剩下一个点对之间的距离。
+<span class="math display">\[d(\textbf{x},\textbf{y})\leq
+d(\textbf{x},\textbf{z})+d(\textbf{z},\textbf{y})\tag{6}\label{eq6}\]</span>
+  在双曲空间中，公式<span
+class="math inline">\(\eqref{eq4}\)</span>定义的测地距离满足此不等式，但是在洛伦兹距离<span
+class="math inline">\(\eqref{eq5}\)</span>下,可能不满足此不等式，因为黎曼度量是负的。考虑原点和两个点<span
+class="math inline">\(\textbf{u}\)</span>,<span
+class="math inline">\(\textbf{v}\)</span>组成的三角形，如图1所示。当两个点在<span
+class="math inline">\(x_1\)</span>轴不同边相距很远时，违反了三角不等式。如果两个点在同<span
+class="math inline">\(x_1\)</span>轴一边，三角不等式成立。</p>
+<img src="triangle.png" alt="图一" /><br />
+<center>
+图1 (a)违反了三角不等式,（b）满足三角不等式 <span
+class="math inline">\(\label{pic1}\)</span>
+</center>
+<h3 id="learning-triangle-inequalities"><strong>Learning Triangle
+Inequalities</strong></h3>
+  Hsieh et al.
+(2017)指出学习嵌入空间中的距离而不是内积有利于学习细粒度的嵌入空间，该空间不仅可以捕获item-user交互的表示，还可以捕获item-item和user-user距离的表示。本质上，所谓的度量学习方案(metric
+learning scheme)受到三角不等式的约束。<br />
+  与协同度量学习方案相反，作者认为两点之间的特征交互可以通过洛伦兹距离的三角不等式的符号来学习，而不是使用距离本身。形式上，score
+function写为： <span class="math display">\[
+\mathcal{T}(\textbf{x},\textbf{y})={d_{\mathcal{L}}^2(\textbf{x},\textbf{y})-d_{\mathcal{L}}^2(\textbf{x},\textbf{0})-d_{\mathcal{L}}^2(\textbf{0},\textbf{y})
+\over
+\langle\textbf{0},\textbf{x}\rangle_{\mathcal{L}}\langle\textbf{0},\textbf{y}\rangle_{\mathcal{L}}}\tag{7}\label{eq7}
+\]</span><br />
+分子为不等式两边的差，分母是为了约束score function.<br />
+  该score function
+对于所有的维度，取值范围均为[-0.5,2].因此，与协同度量学习方案相比，分数函数不受维度的影响。如图2（a），为了说明函数的布局，绘制了等式（7）在2D中两点的取值。<br />
+<img src="2D.jpg" alt="图2" /><br />
+<center>
+图2 （a）triangle learning方案（例如，等式 <span
+class="math inline">\(\eqref{eq7}\)</span>
+）和（b）在二维双曲面模型中使用测地距离的度量学习方案中分数函数的二维图
+</center>
+<p>因为二维双曲模型中的点只有一个自由参数（参考<span
+class="math inline">\(\eqref{eq3}\)</span>），因此图中的x轴和y轴分别表示两个点的自由参数。同时，作者使用等式<span
+class="math inline">\(\eqref{eq4}\)</span>中定义的测地距离绘制了协同度量学习方案的取值图2（b）。通过比较，可以观察到作者提出的方法的取值是平滑和有界的，但是协作度量学习方案的得分函数取值是无界的。有界性是有用的，因为嵌入向量可以自由地远离原点，而分数函数仍可以平滑增长。</p>
+<h2 id="lorentzian-factorization-machine">Lorentzian Factorization
+Machine</h2>
+<h3 id="overview"><strong>Overview</strong></h3>
+<img src="pic3.jpg" alt="图3" /><br />
+<center>
+图3 LorentzFM结构图
+</center>
+<p>  如图三所示，稀疏特征向量<span
+class="math inline">\(\mathcal{V}_x\)</span>作为模型输入。经过Lorentz
+embedding
+layer，将所有特征投影到同一个双曲空间。接下来，将所有字段的嵌入引入一个新的triangle
+pooling层，该层作为所有特征对的聚合函数，从整体上度量三角形不等式的 soft
+“validness”
+。与最近建立在欧几里德嵌入基础上的最先进的神经结构不同，LorentzFM不需要任何额外的参数。特别是，对于给定的稀疏输入<span
+class="math inline">\(V_x\)</span>，池化层的输出是模型输出分数<br />
+<span
+class="math display">\[\hat{S}_{LFM}(\mathcal{V}_x)=\sum_{i,j=1,i\neq
+j}^d \mathcal{T} (\textbf{v}_i,\textbf{v}_j)x_ix_j \tag{8}\label{eq8}
+\]</span><br />
+其中<span class="math inline">\(\textbf{v}_i,\textbf{v}_j \in
+H^n\)</span>是每个输入特征字段的嵌入向量。<span
+class="math inline">\(\mathcal{T}(.,.)\)</span>是特征交互函数。虽然在公式（8）中形式上缺少线性项，但它实际上在池函数<span
+class="math inline">\(\mathcal{T}(.,.)\)</span>中重新出现，如下文所示。（为什么作者强调要有线性项）</p>
+<h3 id="lorentz-embedding-layer"><strong>Lorentz Embedding
+Layer</strong></h3>
+<p>  嵌入层是一个lookup操作，用于将稀疏特征投影到洛伦兹空间中的低维密集向量。即<span
+class="math inline">\(\textbf{v}_k\in
+H^n\)</span>是第k个特征的嵌入向量，而第0个分量由等式<span
+class="math inline">\(\eqref{eq3}\)</span>中的约束给出。<br />
+  在某些情况下，分类特征可以是多值的。例如，电影《泰坦尼克号》的类型可以是“Drama”或“Romance”。因此为这些分类特征使用多个字段，并用“unknown”填充它们，以确保每个样本在特征维度上对齐。</p>
+<h3 id="triangle-pooling-layer"><strong>Triangle Pooling
+Layer</strong></h3>
+<p>  Pooling 层是一个聚合函数，用于将一组嵌入向量转换为一个向量： <span
+class="math display">\[
+\mathcal{T}(\textbf{u},\textbf{v})={d_{\mathcal{L}}^2(\textbf{u},\textbf{v})-d_{\mathcal{L}}^2(\textbf{u},\textbf{0})-d_{\mathcal{L}}^2(\textbf{0},\textbf{v})
+\over
+2\langle\textbf{0},\textbf{u}\rangle_{\mathcal{L}}\langle\textbf{0},\textbf{v}\rangle_{\mathcal{L}}}
+\]</span> <span class="math display">\[
+={1-\langle\textbf{u},\textbf{v}\rangle_{\mathcal{L}}-u_0-v_0 \over
+u_0v_0}
+\]</span> <span class="math display">\[
+={1-\langle\textbf{u},\textbf{v}\rangle_{\mathcal{L}} \over
+2u_0v_0}-\left({1\over u_0}+{1\over v_0}\right)\tag{9}\label{eq9}
+\]</span></p>
+<p>由于标准化分母，出现了线性项，如公式最后一行<span
+class="math inline">\(\left({1\over u_0}+{1\over
+v_0}\right)\)</span>所示。</p>
+<h3 id="objective-and-learning"><strong>Objective and
+Learning</strong></h3>
+<p>  推荐系统和CTR预测的目标函数是二元交叉熵（BCE）： <span
+class="math display">\[
+\arg\,\min_{\theta}\sum_i-y_ilog(p_i)-(1-y_i)log(1-p_i)\tag{10}\label{eq10}
+\]</span> i表示第i个样本，其中<span
+class="math inline">\(p_i=\sigma\left(\hat{S}_{LFM}\left(\mathcal{V}_x^i\right)\right)\)</span>,为第i输入样本<span
+class="math inline">\(\mathcal{V}_x^i\)</span>的（点击）可能性。<span
+class="math inline">\(y_i\)</span>是真实标签。作者指出，尽管贝叶斯个性化排名（Bayesian
+Personalized Ranking, BPR）损失（Rendle et
+al.2009）在普遍的推荐系统中被证明是有用的，但作者不使用它，因为BCE损失是符号敏感的，这是期望的属性，而BPR损失不是。<br />
+  模型参数是通过使用黎曼随机梯度下降法（RSGD）（Bonnabel
+2013）学习的。如Nickel和Kiela（2018）提到的，参数更新方式如下所示：
+<span class="math display">\[
+\theta_{t+1}=exp_{\theta_t}(-\eta\ grad\
+f(\theta_t))\tag{11}\label{eq11}
+\]</span> 其中，<span class="math inline">\(grad\
+f(\theta_t)\)</span>是黎曼流形中定义的梯度，<span
+class="math inline">\(\eta\)</span>是学习率。黎曼梯度是通过将欧几里德空间中的梯度乘以洛伦兹度量，然后在当前参数集跨越的切线空间上执行正交投影来获得的。最后，通过以下指数映射给出参数更新:
+<span class="math display">\[
+exp_{\theta_t}(\textbf{x})=cosh(\Vert\textbf{v}\Vert_{\mathcal{L}})\textbf{x}+sinh(\Vert\textbf{v}\Vert_{\mathcal{L}}){\textbf{v}\over
+\Vert\textbf{v}\Vert_{\mathcal{L}}}\tag{12}\label{eq12}
+\]</span> 它将切线空间中的切线向量v映射到洛伦兹流形上。详细信息见Nickel
+and Kiela（2018） Learning continuous hierarchies in the lorentz model
+of hyperbolic geometry。(待学习)<br />
+  由于score function等式<span
+class="math inline">\(\eqref{eq7}\)</span>是有界且与维度无关的，因此无需在嵌入向量上应用L2正则化项，因为它会对双曲面模型的原点创造一个抵抗梯度。</p>
+<h2 id="实验">实验</h2>
+<figure>
+<img src="table1.jpg" alt="表1" />
+<figcaption aria-hidden="true">表1</figcaption>
+</figure>
+<center>
+表1
+数据预处理后的数据集统计。在Avazu数据集中，itemID和userID没有明确的指示符，因此将相应的行留空。
+</center>
+<p>Steam, MovieLens and KKBox数据集用于推荐任务，Avazu用于CTR任务。</p>
+<figure>
+<img src="table2.jpg" alt="表2" />
+<figcaption aria-hidden="true">表2</figcaption>
+</figure>
+<center>
+表2 每个模型在测试集上的最佳性能。
+</center>
+<p>从表2可发现，
+除了MovieLens数据集，LorentzFM的效果比其他模型都好。原因是MovieLens的稀疏特征的数量是其他数据集的5到100倍，说明当数据非常稀疏时，LorentzFM功能尤其强大。</p>
+<figure>
+<img src="table3.jpg" alt="表3" />
+<figcaption aria-hidden="true">表3</figcaption>
+</figure>
+<center>
+表3 在最佳性能下，每个模型的训练参数数量与训练时间比较表。
+</center>
+<figure>
+<img src="figure5.jpg" alt="图5" />
+<figcaption aria-hidden="true">图5</figcaption>
+</figure>
+<center>
+图5 Visualization of the heatmap of score functions from LorentzFM for
+(a) a positive sample and (b) a negative sample, and from FM for the
+same (c) positive sample and (d) negative sample
+</center>
+<p>  作者选了一个典型的用户(user ID
+“76561198071045315”)。该用户几乎所有正评分都是Steam中免费的游戏。针对该用户，作者画了图5。从图5(a)中可以发现，对于游戏是免费的正样本，由LorentzFM学习到的“UserID”
+和
+“Price”的特征交互分数达到了最高0.4。说明用户非常倾向于免费的物品。而从图5（c）并不能得到该信息。<br />
+  对于游戏价格为$14.99的负样本，由LorentzFM学习到的“UserID” 和
+“Price”的特征交互分数几乎是最低的负数。这意味着负样本主要是由于其价格而被识别的。而FM中“UserID”
+和 “Price” 的内积结果并不占主要地位。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AAAI/" rel="tag"># AAAI</a>
+              <a href="/tags/2020/" rel="tag"># 2020</a>
+              <a href="/tags/FM/" rel="tag"># FM</a>
+              <a href="/tags/CTR/" rel="tag"># CTR</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/15/Multi-Interactive-Attention-Network-for-Fine-grained-Feature-Learning-in-CTR-Prediction/" rel="prev" title="Multi-Interactive Attention Network for Fine-grained Feature Learning in CTR Prediction">
+      <i class="fa fa-chevron-left"></i> Multi-Interactive Attention Network for Fine-grained Feature Learning in CTR Prediction
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/" rel="next" title="Unsupervised Proxy Selection for Session-based Recommender Systems">
+      Unsupervised Proxy Selection for Session-based Recommender Systems <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">技术背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%9B%B2%E5%87%A0%E4%BD%95hyperbolic-geometry"><span class="nav-number">2.1.</span> <span class="nav-text">双曲几何(Hyperbolic
+Geometry)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#learning-triangle-inequalities"><span class="nav-number">2.2.</span> <span class="nav-text">Learning Triangle
+Inequalities</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lorentzian-factorization-machine"><span class="nav-number">3.</span> <span class="nav-text">Lorentzian Factorization
+Machine</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#overview"><span class="nav-number">3.1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lorentz-embedding-layer"><span class="nav-number">3.2.</span> <span class="nav-text">Lorentz Embedding
+Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#triangle-pooling-layer"><span class="nav-number">3.3.</span> <span class="nav-text">Triangle Pooling
+Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#objective-and-learning"><span class="nav-number">3.4.</span> <span class="nav-text">Objective and
+Learning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">实验</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yogattt"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">yogattt</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yogattt</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<!-- 樱花特效 -->
+  
+</body>
+</html>
