@@ -1,8 +1,6 @@
 ---
 title: testpage
-date: 2022-01-16 11:00:24
-tags:
---
-test page 
-make sure the hexo works well after changing the device 
--
+date: 2022-01-16 12:26:07
+categories: hexo使用
+---
+test the hexo work well after changing the device
