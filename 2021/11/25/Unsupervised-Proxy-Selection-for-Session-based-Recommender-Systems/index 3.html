@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要    由于Session-based Recommender Systems（SRS）中缺少用户相关信息，所以很难直接从数据中获得用户的整体兴趣。因此，现有的SRS侧重于如何在会话中有效地建模有关短期兴趣的信息，但它们不足以捕获用户的整体兴趣。为此，作者提出了一个新的框架来克服SRS的局限性，名为ProxySR，它通过对会话代理进行建模来模拟SRS中缺失的信息（即用户的整体兴趣）。    P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unsupervised Proxy Selection for Session-based Recommender Systems">
+<meta property="og:url" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/index.html">
+<meta property="og:site_name" content="Hello World">
+<meta property="og:description" content="摘要    由于Session-based Recommender Systems（SRS）中缺少用户相关信息，所以很难直接从数据中获得用户的整体兴趣。因此，现有的SRS侧重于如何在会话中有效地建模有关短期兴趣的信息，但它们不足以捕获用户的整体兴趣。为此，作者提出了一个新的框架来克服SRS的局限性，名为ProxySR，它通过对会话代理进行建模来模拟SRS中缺失的信息（即用户的整体兴趣）。    P">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure1.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table1.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table2.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table3.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table4.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table5.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure3.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/table6.png">
+<meta property="og:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure4.png">
+<meta property="article:published_time" content="2021-11-25T13:10:16.000Z">
+<meta property="article:modified_time" content="2022-01-16T02:55:47.370Z">
+<meta property="article:author" content="yogattt">
+<meta property="article:tag" content="sigir">
+<meta property="article:tag" content="2021">
+<meta property="article:tag" content="session-based">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/figure1.png">
+
+<link rel="canonical" href="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Unsupervised Proxy Selection for Session-based Recommender Systems | Hello World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/25/Unsupervised-Proxy-Selection-for-Session-based-Recommender-Systems/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="yogattt">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Unsupervised Proxy Selection for Session-based Recommender Systems
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-25 21:10:16" itemprop="dateCreated datePublished" datetime="2021-11-25T21:10:16+08:00">2021-11-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-16 10:55:47" itemprop="dateModified" datetime="2022-01-16T10:55:47+08:00">2022-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="摘要">摘要</h2>
+<p>   由于Session-based Recommender
+Systems（SRS）中缺少用户相关信息，所以很难直接从数据中获得用户的整体兴趣。因此，现有的SRS侧重于如何在会话中有效地建模有关短期兴趣的信息，但它们不足以捕获用户的整体兴趣。为此，作者提出了一个新的框架来克服SRS的局限性，名为ProxySR，它通过对会话代理进行建模来模拟SRS中缺失的信息（即用户的整体兴趣）。<br />
+ 
+ ProxySR以无监督的方式为输入的会话选择一个合适的proxy，将其与从该会话提取的短期兴趣结合，用于next
+item
+prediction。此外，作者还提出了SRS的另一种现实情况，即少数用户登录并在会话中留下他们的标识符，并针对这种情况修改了ProxySR。<br />
+   ProxySR模型设计的初衷来源于以下总体兴趣的特征：</p>
+<ul>
+<li>多个会话可能具有相似的用户总体兴趣（比如，这多个会话是由同一个用户创建的，且该用户具备稳定的总体兴趣）</li>
+<li>除了短期兴趣外，总体兴趣也可以弥补会话推荐中丢失的信息，以帮助预测下一个交互的item</li>
+</ul>
+<h2 id="methond">Methond</h2>
+<figure>
+<img src="figure1.png" alt="图1 ProxySR的总体架构" />
+<figcaption aria-hidden="true">图1 ProxySR的总体架构</figcaption>
+</figure>
+<h3 id="proxy-selection"><strong>Proxy Selection</strong></h3>
+<p>  ProxySR首先通过输入的session <span class="math inline">\(s\)</span>
+构建偏态概率分布，进而从预先定义的K个proxy embeddings选择一个proxy
+embedding。更具体地说，ProxySR利用encoder
+network生成概率的对数，然后通过用具有温度参数的softmax函数将其转换为偏态概率分布
+<span class="math inline">\(\pi \in \mathbb{R}^K\)</span>
+，如下所示：<br />
+<span class="math display">\[\boldsymbol\alpha=f^P(s)\]</span> <span
+class="math display">\[\boldsymbol{\pi_i}={exp(\boldsymbol{\alpha_i}/\tau)\over
+\sum_{j=1}^Kexp(\boldsymbol{\alpha_j}/\tau)} \ for\ i\in(1,2,...,K)
+\tag{1}\label{eq1}\]</span> 其中 <span
+class="math inline">\(f^P\in\mathbb{R}^K\)</span>是对于session <span
+class="math inline">\(s\)</span> 的 encoder network。𝐾为Proxy数量，<span
+class="math inline">\(\boldsymbol{\pi_i}\)</span>是第i个Proxy的概率。<span
+class="math inline">\(\tau&gt;0\)</span>是温度参数。当<span
+class="math inline">\(\tau\)</span>越小，<span
+class="math inline">\(\boldsymbol\pi\)</span>变成一个接近one-hot向量的分布。当<span
+class="math inline">\(\tau\)</span>越大，<span
+class="math inline">\(\boldsymbol\pi\)</span>变成一个每个元素接近1/K的均匀分布。因此，作者将一个较大的初始值指定给𝜏
+并随着训练的进行而减小，因为如果𝜏
+很小，梯度会偏向于少数对数，这对于不稳定的初始训练是不可取的。最后获得session
+<span class="math inline">\(s\)</span>的proxy embedding <span
+class="math inline">\(p^{(s)}\)</span><br />
+<span class="math display">\[
+\gamma={\sum_{j=1}^K\Vert\boldsymbol{\pi_j}P_j\Vert_2\over
+\Vert\sum_{j=1}^K\boldsymbol{\pi_j}P_j\Vert_2}
+\]</span> <span
+class="math display">\[p^{(s)}=\gamma\sum_{j=1}^k\boldsymbol{\pi_j}P_j\tag{2}\]</span></p>
+<p>其中 <span class="math inline">\(P\in\mathbb{R}^{K\times d}\)</span>
+是proxy embedding matrix。<span class="math inline">\(\tau\)</span>
+经过几次训练后已经足够小了，因此 <span
+class="math inline">\(\pi\)</span> 变为一个one-hot
+vector，并且仅从集合中选择一个proxy embedding。<br />
+  当<span
+class="math inline">\(\tau\)</span>在初始训练阶段较大时，获得的代理的规模可能太小，因为每个proxy都是以均值为
+0 随机初始化的，并均匀聚合以相互抵消。因此，作者通过使用 <span
+class="math inline">\(\gamma\)</span>
+重新缩放获得的proxy来防止这个问题，这迫使其 <span
+class="math inline">\(\mathcal{l}_2\)</span> 范数保持proxies的 <span
+class="math inline">\(\mathcal{l}_2\)</span>范数的加权平均值。</p>
+<h4 id="boldsymbolfps实现细节"><strong><span
+class="math inline">\(\boldsymbol{f^P(s)}\)</span>实现细节</strong></h4>
+<p>  encoder network如下<br />
+<span class="math display">\[f^P(s)={1\over n}
+\sum_{j=1}^nW^{P,(2)^T}\sigma\left(W^{P,(1)^T}\left(I_{s_j}+E_j^P\right)\right)\tag{3}\label{eq3}\]</span><br />
+其中，<span class="math inline">\(I_{s_j}\)</span>是session <span
+class="math inline">\(s\)</span>中第j个item的embedding。<span
+class="math inline">\(E_j^P\)</span>是对于位置j的learnable positional
+embedding。<span
+class="math inline">\(W^{P,(1)^T}\in\mathbb{R}^{d\times\lfloor
+(d+K)/2\rfloor }\)</span>,<span
+class="math inline">\(W^{P,(2)^T}\in\mathbb{R}^{\lfloor (d+K)/2\rfloor
+\times K }\)</span> 为权重矩阵。<span
+class="math inline">\(\sigma\)</span>为负斜率为0.1的Leaky ReLU。<br />
+  注意,在训练阶段，作者使用了全部的session item来选择proxy，而在预测next
+item <span class="math inline">\(s_t\)</span>时只使用了<span
+class="math inline">\([s_1,s_2,...s_{t-1}]\)</span></p>
+<h4 id="discussion"><strong>Discussion</strong></h4>
+<p>  作者讨论了为什么不使用普通的softmax将多个proxies加权生成对应session的proxy。作者认为，对多个proxies的加权组合会为每个session创建一个独一无二的proxy,这相当于对session
+encoder 为representation。但是，只从单个session
+中很难提取整体兴趣。因此不能保证加权结合能够对多个sessions中的公共整体兴趣建模。而ProxySR选择的是最有可能的一个proxy，因此选择的proxy能够在多个session之间共享，进而能捕捉这些sessions之间的共同信息。</p>
+<h3 id="short-term-interest-encoder"><strong>Short-term Interest
+Encoder</strong></h3>
+<p>  session 中本身包含短期兴趣，因此直接将session encoder
+为隐表示作为short-term interest <span
+class="math inline">\(s^{(s)}\)</span><br />
+<span class="math display">\[
+s^{(s)}=f^S(s)\tag{4}\label{eq4}
+\]</span> 其中<span
+class="math inline">\(f^S(s)\in\mathbb{R}^d\)</span>为encoder
+network。<span class="math inline">\(s^{(s)}\in\mathbb{R}^d\)</span>
+为session <span class="math inline">\(s\)</span>包含的short-term
+interest的表示。</p>
+<h4 id="boldsymbolfss实现细节"><strong><span
+class="math inline">\(\boldsymbol{f^S(s)}\)</span>实现细节</strong></h4>
+<p>  考虑items之间的依赖关系，作者使用具有残差连接的自注意力网络。 <span
+class="math display">\[X=[I_{s_1}+E_n^S,I_{s_2}+E_{n-1}^S,...,I_{s_n}+E_1^S]^T
+\]</span> <span class="math display">\[Q=ReLU(XW^{S,(Q)})\]</span> <span
+class="math display">\[K=ReLU(XW^{S,(K)})\]</span> <span
+class="math display">\[A=softmax({QK^T\over\sqrt d })\]</span> <span
+class="math display">\[Z=AX+X \]</span> <span
+class="math display">\[f^S(s)=W^{S,(2)^T}ReLU\left(W^{S,(1)^T}Z+b^{S,(1)}\right)+b^{S,(2)}\tag{5}\label{eq5}\]</span>
+其中<span class="math inline">\(E_j^S\)</span>为逆序的learnable
+positional embedding。<span
+class="math inline">\(X\in\mathbb{R}^{n\times
+d};W^{S,(Q)},W^{S,(K)},W^{S,(1)},W^{S,(2)}\in\mathbb{R}^{d\times
+d};b^{S,(1)},b^{S,(2)}\in\mathbb{R}^d\)</span></p>
+<h3 id="combination"><strong>Combination</strong></h3>
+<p>  该部分将为session s选择好的proxy <span
+class="math inline">\(p^{(s)}\)</span>和其短期兴趣<span
+class="math inline">\(s^(s)\)</span>结合到一起，获得会话s的最终表示，然后再用该表示计算该session和目标item
+i之间相异性得分。然而，根据一些先例研究，简单的加法不能模拟比一对一关系更复杂的三元组内的关系。</p>
+<ul>
+<li>情景1：如果同一个item与两个不同和短期兴趣、同一个selected
+proxy相关，那么模型可能会认为这两个不同的短期兴趣是相似的，即if <span
+class="math inline">\(p + s^{(1)} ≈ I_i\)</span> and <span
+class="math inline">\(p + s^{(2)} ≈ I_𝑖\)</span> then $ s^{(1)} ≈
+s^{(2)}$</li>
+<li>情景2：如果两个不同的item与同一个proxy相关，且分别与两个相似的短期兴趣相关，那么模型会认为这两个不同的item是相似的，即
+if <span class="math inline">\(p + s^{(1)} ≈ I𝑖^{(1)}\)</span> and <span
+class="math inline">\(p + s^{(2)} ≈ I_i^{(2)}\)</span> where <span
+class="math inline">\(s^{(1)} ≈ s^{(2)}\)</span>, then <span
+class="math inline">\(I_i^{(1)} ≈ I_i^{(2)}\)</span></li>
+</ul>
+<p>因此，作者借鉴TransH的思想，将短期兴趣和目标item的embedding投影到超平面（hyperplane），以捕获三元组间复杂的关系。具体来说，首先获得投影到超平面的short-term
+interest <span class="math inline">\(s_\perp ^{(s)}\)</span>以及目标
+item embedding <span class="math inline">\(I_{i\perp}\)</span> <span
+class="math display">\[
+\boldsymbol{v}={\sum_{j=1}^K\Vert\boldsymbol{\pi_j}V_j\Vert_2\over
+\Vert\sum_{j=1}^K\boldsymbol{\pi_j}V_j\Vert_2}
+\]</span> <span class="math display">\[s_\perp
+^{(s)}=s^{(s)}-\boldsymbol{v}^Ts^{(s)}\boldsymbol{v}\]</span> <span
+class="math display">\[I_{i\perp}=I_i-\boldsymbol{v}^TI_i\boldsymbol{v}\]</span>
+<span class="math inline">\(V\in\mathbb{R}^{K\times d}\)</span> 是proxy
+hyperplanes的单位法向量set。<span
+class="math inline">\(\boldsymbol{v}\in\mathbb{R}^d\)</span>是投影到<span
+class="math inline">\(p^{(s)}\)</span>的超平面的单位法向量。为了使法向量与proxy的超平面正交并具有单位长度，作者约束<span
+class="math inline">\(\lvert v\cdot p^{(s)}\rvert/\Vert p^{(s)}\Vert_2
+\le \epsilon\)</span> , <span class="math inline">\(\Vert
+V_j\Vert_2=1\)</span><br />
+  最后，会话 𝑠 和目标item 𝑖 之间的相异性分数是通过预测的item
+embedding与proxy的聚合以及预测的短期兴趣之间的距离来估计的。计算相异性分数如下：
+<span
+class="math display">\[dist(s,i)=\left\Vert\left(p^{(s)}+s_\perp^{(s)}\right)-I_{i\perp}\right\Vert_2^2\tag{7}
+\]</span></p>
+<h3 id="training"><strong>Training</strong></h3>
+<p>  采用 marginal loss 训练模型。采用单位法向量 v
+的正交正则器orthogonality regularizer和distance
+regularizer，强制会话表示接近目标item embbedng.<br />
+  首先定义损失函数<span class="math inline">\(\mathcal{L}\)</span> <span
+class="math display">\[\mathcal{L}=\sum_{\{s,i^+\}\in \boldsymbol
+S}\sum_{i^-\in NI(s)}[m+dist(s,i^+)-dist(s,i^-)]_+\tag{8}
+\]</span> <span class="math inline">\(i^+\)</span> 为session s的true
+next item, <span class="math inline">\(NI(s)\subset I\backslash
+i^+\)</span> 是session s 的 negative items 集。<span
+class="math inline">\([x]_+=max(x,0)\)</span>。𝑚 is the margin。<br />
+  包括正则化项，最终的最小化目标函数J定义为如下所示：<br />
+<span class="math display">\[reg^{dist}=\sum_{\{s,i^+\}\in \boldsymbol
+S}dist(s,t^+)\]</span> <span
+class="math display">\[reg^{orthog}=\sum_{\{s,i^+\}\in \boldsymbol
+S}{\rvert v^{(s)}\cdot p^{(s)}\rvert\over \Vert p^{(s)}\Vert_2}\]</span>
+<span class="math display">\[\mathcal{J}=\mathcal{L}+\lambda^{dist}\cdot
+reg^{dist}+\lambda^{orthog}\cdot reg^{orthog}\tag{9}\]</span></p>
+<h3 id="another-real-world-case-user-semi-supervision"><strong>Another
+Real-world Case: User Semi-supervision</strong></h3>
+<p>作者还考虑了当数据集中存在部分用户信息的时候，如何利用这些用户信息进行半监督学习。即在生成proxy的概率分布时加入user
+bias，对于缺少用户信息的session,仍按初始的方式计算proxy的概率<span
+class="math inline">\(\eqref{eq1}\)</span>： <span
+class="math display">\[\boldsymbol{\pi_i}^{user}={exp\left(\left(\boldsymbol{\alpha_i}+u_j^{(s)}\right)/\tau\right)\over
+\sum_{j=1}^Kexp\left(\left(\boldsymbol{\alpha_j}+u_j^{(s)}\right)/\tau\right)}
+\ for\ i\in(1,2,...,K) \tag{10}\label{eq10}\]</span><br />
+其中<span class="math inline">\(u^{(s)}\in\mathbb{R}^K\)</span>
+是对于session s的用户可学习user bias。</p>
+<h2 id="experiments">EXPERIMENTS</h2>
+<h3 id="datasets"><strong>datasets</strong></h3>
+<center>
+表1 Statistics of datasets
+</center>
+<p><img src="table1.png" /></p>
+<p>实验包含两个任务：</p>
+<ul>
+<li>next unseen item recommendation</li>
+<li>next item recommendation with repetitive consumption.</li>
+</ul>
+<h3 id="performance-comparison"><strong>Performance
+Comparison</strong></h3>
+<center>
+表2 Overall performance on the next unseen item recommendation
+</center>
+<p><img src="table2.png" /></p>
+<center>
+表3 Overall performance on the next item recommendation with repetitive
+consumption
+</center>
+<p><img src="table3.png" /></p>
+<p>ProxySR与CSRM和GCE-GNN的比较证明，基于item
+co-occurrence的相邻会话的信息不足以捕获会话的一般兴趣。
+ProxySR在短序列的数据集更有效。如在RetailRocket数据集上提升最大。在LastFM数据集上提升最小。</p>
+<center>
+表4 Performance of ProxySR in the real-world scenario where a few
+sessions have their user information
+</center>
+<p><img src="table4.png" /></p>
+<h3 id="消融实验"><strong>消融实验</strong></h3>
+<center>
+表5 Result of the ablation study on each component in ProxySR
+</center>
+<p><img src="table5.png" /></p>
+<h3 id="hyperparameter-study"><strong>Hyperparameter Study</strong></h3>
+<figure>
+<img src="figure3.png" alt="图2" />
+<figcaption aria-hidden="true">图2</figcaption>
+</figure>
+<center>
+图2 Result of the hyperparameter parameter study on 𝐾 in ProxySR.
+</center>
+<h3 id="analyses-on-proxies-from-proxysr"><strong>Analyses on Proxies
+from ProxySR</strong></h3>
+<h4 id="information-encoded-in-proxies"><strong>Information Encoded in
+Proxies</strong></h4>
+<center>
+表6 Performance of HRNN with various types of the user information in it
+</center>
+<p><img src="table6.png" /><br />
+  HRNN通过user-level RNN，顺序使用用户会话来训练user embedding。</p>
+<h4 id="visualizations"><strong>Visualizations</strong></h4>
+使用t-分布领域嵌入（t-SNE）来可视化高维表示。图3展示了与10个随机用户相关的session表示可视化，相同颜色的圆圈表示该session属于同一个user。
+<img src="figure4.png" alt="图3" /><br />
+<center>
+图3 Visualizations of several representations related to sessions
+</center>
+<p>从图3可以发现：</p>
+<ul>
+<li>有些proxy是由多个用户的会话选择的，这是因为多个用户可能有相似的一般兴趣（多种颜色聚集的一团）</li>
+<li>多个proxies被相同用户的session选择，说明proxy可以对比用户一般兴趣更细粒度的信息进行建模。（浅蓝色那一团）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/sigir/" rel="tag"># sigir</a>
+              <a href="/tags/2021/" rel="tag"># 2021</a>
+              <a href="/tags/session-based/" rel="tag"># session-based</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/16/Learning-Feature-Interactions-with-Lorentzian-Factorization-Machine/" rel="prev" title="Learning Feature Interactions with Lorentzian Factorization Machine">
+      <i class="fa fa-chevron-left"></i> Learning Feature Interactions with Lorentzian Factorization Machine
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/26/LaTex%E8%A1%A8%E8%BE%BE/" rel="next" title="LaTex表达">
+      LaTex表达 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methond"><span class="nav-number">2.</span> <span class="nav-text">Methond</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-selection"><span class="nav-number">2.1.</span> <span class="nav-text">Proxy Selection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfps%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.1.1.</span> <span class="nav-text">\(\boldsymbol{f^P(s)}\)实现细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#discussion"><span class="nav-number">2.1.2.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#short-term-interest-encoder"><span class="nav-number">2.2.</span> <span class="nav-text">Short-term Interest
+Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boldsymbolfss%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">\(\boldsymbol{f^S(s)}\)实现细节</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#combination"><span class="nav-number">2.3.</span> <span class="nav-text">Combination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#training"><span class="nav-number">2.4.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#another-real-world-case-user-semi-supervision"><span class="nav-number">2.5.</span> <span class="nav-text">Another
+Real-world Case: User Semi-supervision</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiments"><span class="nav-number">3.</span> <span class="nav-text">EXPERIMENTS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#datasets"><span class="nav-number">3.1.</span> <span class="nav-text">datasets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performance-comparison"><span class="nav-number">3.2.</span> <span class="nav-text">Performance
+Comparison</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.3.</span> <span class="nav-text">消融实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hyperparameter-study"><span class="nav-number">3.4.</span> <span class="nav-text">Hyperparameter Study</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#analyses-on-proxies-from-proxysr"><span class="nav-number">3.5.</span> <span class="nav-text">Analyses on Proxies
+from ProxySR</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#information-encoded-in-proxies"><span class="nav-number">3.5.1.</span> <span class="nav-text">Information Encoded in
+Proxies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#visualizations"><span class="nav-number">3.5.2.</span> <span class="nav-text">Visualizations</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yogattt"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">yogattt</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yogattt</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<!-- 樱花特效 -->
+  
+</body>
+</html>
