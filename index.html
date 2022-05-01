@@ -181,7 +181,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-05-01 13:28:19 / Modified: 22:43:58" itemprop="dateCreated datePublished" datetime="2022-05-01T13:28:19+08:00">2022-05-01</time>
+              <time title="Created: 2022-05-01 13:28:19 / Modified: 23:30:20" itemprop="dateCreated datePublished" datetime="2022-05-01T13:28:19+08:00">2022-05-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -205,13 +205,17 @@
 
       
           <h2 id="abstract">Abstract</h2>
-<p>  目前大多数回话推荐通常仅根据回话内的依赖关系做预测，忽略了复杂的会话间关系和其它可获得的边信息（item属性，users）,限制了推荐系统的准确性。为了从会话信息和边信息中有效提取会话间和会话内的依赖，进一步提升下一个item预测的准确性，作者提出了一个新的超图学习框架。该框架包含三个模块：
-- 超图构造模块（hypergraph construction
+<p>  目前大多数回话推荐通常仅根据回话内的依赖关系做预测，忽略了复杂的会话间关系和其它可获得的边信息（item属性，users）,限制了推荐系统的准确性。为了从会话信息和边信息中有效提取会话间和会话内的依赖，进一步提升下一个item预测的准确性，作者提出了一个新的超图学习框架。该框架包含三个模块：</p>
+<ul>
+<li>超图构造模块（hypergraph construction
 module），构造一个超图，以统一的方式将用户、项目和项目属性连接在一起。<br />
-- 超图学习模块（hypergraph learning
+</li>
+<li>超图学习模块（hypergraph learning
 module），通过提取构建超图中嵌入的会话内和会话间依赖项，学习每个 item 和
-user 的信息潜在表示。 - 下一个item预测模块（next-item predection
-module)。讲学习到的表示送入预测模块用于推荐。</p>
+user 的信息潜在表示。</li>
+<li>下一个item预测模块（next-item predection
+module)。讲学习到的表示送入预测模块用于推荐。</li>
+</ul>
 <h2 id="introduction">Introduction</h2>
 <p>  two challenges :</p>
 <ul>
