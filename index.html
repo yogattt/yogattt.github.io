@@ -181,7 +181,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-05-01 13:28:19 / Modified: 16:57:58" itemprop="dateCreated datePublished" datetime="2022-05-01T13:28:19+08:00">2022-05-01</time>
+              <time title="Created: 2022-05-01 13:28:19 / Modified: 22:18:11" itemprop="dateCreated datePublished" datetime="2022-05-01T13:28:19+08:00">2022-05-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,9 +230,306 @@ aggregation)，以了解会话间的依赖性，以吸收其他会话的信息�
 agregation学习用户的偏好。具体来说，session
 aggregation聚合用户的所有历史会话，以代表她/他的偏好.</p>
 <p><img src="figure1.png" /></p>
-<center>
-图1：基于user-item信息和item-attribute信息构建的超图示例。
-</center>
+<p><span class="math display">\[ \footnotesize
+图1：基于user-item信息和item-attribute信息构建的超图示例。\]</span></p>
+<h2 id="problem-statement">Problem statement</h2>
+<p><span class="math display">\[
+\begin{array}{|c|c|}
+\hline
+{符号}&amp;{含义} \\
+\hline
+{\mathcal{U}=\left\{u_{1}, u_{2}, \ldots, u_{|u|}\right\}} &amp;
+{包含所有不同user的user集合} \\
+\hline
+{\mathcal{V}^{I}=\left\{v_{1}, v_{2}, \ldots,
+v_{\left|\mathcal{V}^{I}\right|}\right\}}&amp;{包含所有不同item的item集合}
+\\
+\hline
+{\mathcal{D}=\left\{S_{1}, S_{2}, \ldots,
+S_{|u|}\right\}}&amp;{数据集中所有的用户事物集合} \\
+\hline
+{S_{i}=\left\{s_{i, 1}, s_{i, 2}, \ldots,
+s_{i,|s|}\right\}}&amp;{与用户i相关的session集合} \\
+\hline
+{s_{i, j}=\left\{v_{i, j, 1}, v_{i, j, 2, \ldots}\right.\left.v_{i,
+j,\left|s_{i, j}\right|}\right\}}&amp;{用户i的第j个session} \\
+\hline
+{\mathcal{V}^{\mathcal{A}}=\left\{a_{1}, a_{2}, \ldots,
+a_{\left|\mathcal{V}^{A}\right|}\right\}}&amp;{数据集中所有item的属性值集合}
+\\
+\hline
+{\mathcal{A}=\left\{A_{1}, A_{2}, \ldots,
+A_{\left|\mathcal{V}^{I}\right|}\right\}}&amp;{所有item的属性集合} \\
+\hline
+{A_{h}=\left\{a_{h, 1}, a_{h, 2}, \ldots,
+a_{h,\left|A_{h}\right|}\right\}}&amp;{item \ v_h\ 的属性值集合} \\
+\hline
+{C_{v_{l}}^{s_{i}}=\left\{v_{1}, v_{2}, \ldots,
+v_{l-1}\right\}}&amp;{对应会话的上下文，顺序包含session\ s_{i,j}
+中目标item\ v_j\ 之前出现的所有item} \\
+\hline
+{C_{v_{l}}^{a}=\left\{\mathcal{A}_{v_{1}}, \mathcal{A}_{v_{2}}, \ldots,
+\mathcal{A}_{v_{l-1}}\right\}}&amp;{对应的属性上下文} \\
+\hline
+\end{array}
+\]</span></p>
+<h2 id="hypergraph-learning-framework">Hypergraph learning
+framework</h2>
+<h3 id="preliminaries"><strong>Preliminaries</strong></h3>
+<p>  图表只能表示成对关系。相比之下，超图保留了多方面关系，因此是建模复杂关系的自然选择。将超图定义如下：</p>
+<p><img src="figure2.png" /></p>
+<p><span class="math display">\[ \footnotesize
+图2：超图学习框架工作流程\]</span></p>
+<p>在有限顶点集<span class="math inline">\(\mathcal{V}=\left\{v_{i}: i
+\in\|n\|\right\}\)</span>上带有超边<span
+class="math inline">\(\mathcal{E}=\left\{e_{j}: j
+\in\|p\|\right\}\)</span>的超图<span
+class="math inline">\(\mathcal{G}=\{\mathcal{V},
+\mathcal{E}\}\)</span>,每个超边都是 <span
+class="math inline">\(\mathcal{V}\)</span> 的非空子集，满足<span
+class="math inline">\(\cup_{j \in\|p\|} \|
+e_{j}=\mathcal{V}\)</span></p>
+<h3 id="hypergraph-construction"><strong>Hypergraph
+construction</strong></h3>
+<p>  首先在图中建立users,items，items attribute
+values三种类型的节点。因此图中的节点集合为<span
+class="math inline">\(\mathcal{V}=\mathcal{U} \cup
+\mathcal{V}^{\mathcal{I}} \cup
+\mathcal{V}^{\mathcal{A}}\)</span>,然后在超图中建立user-session
+relations, the item-item relations, and the item-attribute value
+relations 三种超边关系。因此超图中超边集为<span
+class="math inline">\(\mathcal{E}=\mathcal{E}^{\mathcal{U}} \cup
+\mathcal{E}^{\mathcal{I}} \cup \mathcal{E}^{\mathcal{A}}\)</span>。</p>
+<ul>
+<li>超边<span class="math inline">\(e_{\mathcal{u}}\in
+\mathcal{E}^{\mathcal{U}}\)</span> 表示用户<span
+class="math inline">\(u\)</span>购买的session <span
+class="math inline">\(s_{u}=\left\{v_{u, 1}, v_{u, 2}, \ldots,
+v_{u,\left|s_{u}\right|}\right\}\)</span>,换句话说，用户u在一个会话中购买的项目$v_{u,
+1}, v_{u, 2}, , v_{u, s_{u} } <span
+class="math inline">\(通过这个超边\)</span>e_u$链接。</li>
+<li>超边<span class="math inline">\(e_{i,j}^I\in
+\mathcal{E}^{\mathcal{I}}\)</span> 表示在某个会话中 item <span
+class="math inline">\(v_j\)</span>出现在item <span
+class="math inline">\(v_i\)</span> 后面。</li>
+<li>超边<span class="math inline">\(e_i^A\in
+\mathcal{E}^{\mathcal{A}}\)</span> 表示item <span
+class="math inline">\(v_i\)</span>带有属性值集合 <span
+class="math inline">\(A_{i}=\left\{a_{i, 1}, a_{i, 2}, \ldots,
+a_{i,\left|v_{i}\right|}\right\}\)</span>,item <span
+class="math inline">\(v_i\)</span>通过超边与这些属性值相连。</li>
+</ul>
+<h3 id="hypergraph-learning"><strong>Hypergraph learning</strong></h3>
+<p>  HL主要由三个部分组成（1）node level aggregation (2) node level
+updating and (3) graph level learning.</p>
+<h4 id="node-level-aggregation-in-hypergraph"><strong>Node level
+aggregation in hypergraph</strong></h4>
+<p>  首先将user node <span class="math inline">\(u\in
+\mathcal{U}\)</span> 和 item node <span
+class="math inline">\(v\in\mathcal{V}^{I}\)</span>
+映射到低维隐空间获得初始的表示 <span class="math inline">\(\mathbf{u},
+\mathbf{v} \in \mathbb{R}^{d}\)</span>。然后，对于每一个item <span
+class="math inline">\(v\in\mathcal{V}^{I}\)</span>,通过在 $G
+$中分别从三种类型的 <span class="math inline">\(v\)</span>
+的邻域节点中吸收信息，使用三种聚合操作得到三种类型的隐向量表达 <span
+class="math inline">\(\mathbf{v}_{i}^{U}, \mathbf{v}_{i}^{I},
+\mathbf{v}_{i}^{A}\)</span>。从特定角度来看，每种类型的潜在表示都可以被视为item的子表示。对于每一个user
+<span
+class="math inline">\(u\in\mathcal{U}\)</span>，通过学习他的历史session和当前session中的偏好来更新隐表示。<br />
+  <strong>user aggregation</strong> 用于学习item <span
+class="math inline">\(v_i\)</span> 的 user-based latent representation
+<span class="math inline">\(\mathbf{v}_{i}^{U}\in
+\mathbb{R}^{d}\)</span>。用户聚合的目的是汇总来自联合用户的项目的信息。
+<span class="math display">\[ \mathbf{v}_{i}^{U}=A g g r e_{u s e
+r}\left\{\mathbf{v}_{j}, \forall v_{j} \in N_{u s e
+r}\left(v_{i}\right)\right\} \]</span> <span class="math inline">\(N_{u
+s e r}\left(v_{i}\right)\)</span>是item <span
+class="math inline">\(v_i\)</span> 基于用户的领域集，包含的item <span
+class="math inline">\(v_j\)</span> 满足与item <span
+class="math inline">\(v_i\)</span> 有同一 user 交互。指定用户聚合如下:
+<span
+class="math display">\[{Aggre}_{user}\left(\mathbf{v}_{i}\right)=\mathbf{A}_{i}^{u}\left[\mathbf{v}_{i,
+1}, \mathbf{v}_{i, 2}, \ldots, \mathbf{v}_{i,\left|N_{u s e
+r}\left(v_{i}\right)\right|}\right]^{T}\]</span></p>
+<p>权重矩阵 <span class="math inline">\(\mathbf{A}_{i}^u\)</span> 表示
+<span class="math inline">\(N_{u s e r}\left(v_{i}\right)\)</span>
+中每个item 对于 <span class="math inline">\(v_i\)</span> 的重要性。<span
+class="math inline">\(\mathbf{A}_{i}^u\)</span> 计算方式如下： <span
+class="math display">\[\mathbf{A}_{i,
+j}^{u}=\frac{\left\|\mathcal{V}_{i,
+j}^{e_{u}}\right\|_{2}}{\left\|\mathcal{V}_{i}^{e_{u}}\right\|_{2}+\left\|\mathcal{V}_{j}^{e_{u}}\right\|_{2}}\]</span>
+其中，<span class="math inline">\(\mathcal{V}_{i, j}^{e_{u}}=\left\{u
+\mid\left(v_{i}, v_{j}, u\right) \in e_{u}\right\}\)</span> 表示与 <span
+class="math inline">\(v_i\ v_j\)</span> 都相连的用户的数量。<span
+class="math inline">\(\mathcal{V}_{i}^{e_{u}}=\left\{u \mid\left(v_{i},
+u\right) \in e_{u}\right\}\)</span> 表示与<span
+class="math inline">\(v_i\)</span>相连的用户的数量。<br />
+  <strong>item aggregation</strong> 用于学习item <span
+class="math inline">\(v_i\)</span> 的 inter-session-based latent
+representation <span class="math inline">\(\mathbf{v}_{i}^{I}\in
+\mathbb{R}^{d}\)</span>。item聚合的目的是汇总与item <span
+class="math inline">\(v_i\)</span> 在同一session上出现的其他item的信息。
+<span class="math display">\[\mathbf{v}_{i}^{I}=A g g r e_{\text {sess
+}}\left\{\mathbf{v}_{j}, \forall v_{j} \in
+N_{sess}\left(v_{i}\right)\right\}\]</span> <span
+class="math inline">\(N_{sess}\)</span> 是 item <span
+class="math inline">\(v_i\)</span>
+基于session的领域集，它包含超图中与item <span
+class="math inline">\(v_i\)</span> 在同一会话中出现的所有 item
+节点。指定 item 聚合如下： <span class="math display">\[{Aggre} e_{i t e
+m s}\left(\mathbf{v}_{i}\right)=\mathbf{A}_{i}^{s}\left[\mathbf{v}_{i,
+1}, \mathbf{v}_{i, 2}, \ldots,
+\mathbf{v}_{i,|{sess}|}\right]^{T}\]</span> <span
+class="math inline">\(\left[\mathbf{v}_{i, 1}, \mathbf{v}_{i, 2},
+\ldots, \mathbf{v}_{i,|{sess}|}\right]\)</span> 是item nodes <span
+class="math inline">\({v}_{i, 1}, {v}_{i, 2}, \ldots, {v}_{i,|{sess}|}
+\in N_{sess}\)</span> 的隐表示列表。权重矩阵 <span
+class="math inline">\(\mathbf{A}_{i}^s\)</span> 表示 <span
+class="math inline">\(N_{sess}\left(v_{i}\right)\)</span> 中每个item
+对于 <span class="math inline">\(v_i\)</span> 的重要性。<span
+class="math inline">\(\mathbf{A}_{i}^s\)</span> 计算方式如下： <span
+class="math display">\[\mathbf{A}_{i,
+j}^{s}=\frac{\left\|\mathcal{V}_{i,
+j}^{e^I}\right\|_{2}}{\left\|\mathcal{V}_{i}^{e^I}\right\|_{2}+\left\|\mathcal{V}_{j}^{e^I}\right\|_{2}}\]</span>
+其中，<span class="math inline">\(\mathcal{V}_{i,
+j}^{e^I}=\{sess|(v_i,v_j,sess)\in e^I\}\)</span> 表示同时包含 <span
+class="math inline">\(v_i,v_j\)</span> 的session 的数量。<span
+class="math inline">\(\mathcal{V}_{i}^{e^I}=\{sess|(v_i,sess)\in
+e^I\}\)</span> 表示包含 <span class="math inline">\(v_i\)</span> 的
+session 的数量。<br />
+  <strong>attribute aggregation</strong> 用于学习item <span
+class="math inline">\(v_i\)</span> 的 attribute-based latent
+representation <span class="math inline">\(\mathbf{v}_{i}^{A}\in
+\mathbb{R}^{d}\)</span>。属性聚合的目的是聚合与item <span
+class="math inline">\(v_i\)</span> 有共享属性值的 item 的信息。 <span
+class="math display">\[\mathbf{v}_{i}^{A}=A g g r e_{\text {attri
+}}\left\{\mathbf{v}_{j}, \forall v_{j} \in
+N_{attri}\left(v_{i}\right)\right\}\]</span> <span
+class="math display">\[{Aggre}
+e_{attri}\left(\mathbf{v}_{i}\right)=\mathbf{A}_{i}^{A}\left[\mathbf{v}_{i,
+1}, \mathbf{v}_{i, 2}, \ldots,
+\mathbf{v}_{i,|{attri}|}\right]^{T}\]</span> <span
+class="math display">\[\mathbf{A}_{i,
+j}^{A}=\frac{\left\|\mathcal{V}_{i,
+j}^{e^A}\right\|_{2}}{\left\|\mathcal{V}_{i}^{e^A}\right\|_{2}+\left\|\mathcal{V}_{j}^{e^A}\right\|_{2}}\]</span></p>
+<h3 id="node-level-updating-in-hypergraph"><strong>Node level updating
+in hypergraph</strong></h3>
+<p>item <span class="math inline">\(v_i\)</span> 的最终隐表示： <span
+class="math display">\[\mathbf{v}_i=\sigma\left(\mathbf{W} \cdot
+Concat\left[\mathbf{v}_{i}^{U}, \mathbf{v}_{i}^{I}, \mathbf{v}_{i}^{A}
+\right]+b \right)\]</span> 然后，对于每一个 item <span
+class="math inline">\(v_i\)</span>,通过给定 session
+中其它节点信息，使用门控图神经网络迭代更新 <span
+class="math inline">\(v_i\)</span> 的表示 <span
+class="math inline">\(\mathbf{v}_i\)</span>。因此 intra-session
+依赖信息被学习并编码为 item 表示。首先根据连接矩阵 <span
+class="math inline">\(\mathbf{M}^s\)</span> 从 item <span
+class="math inline">\(v_i\)</span> 的intra-session-based 邻居item
+得到聚合信息 <span class="math inline">\(\texttt{a}_{s,j}^t\)</span></p>
+<p><span
+class="math display">\[\texttt{a}_{s,j}^t=\mathbf{M}_{i,:}^s[\mathbf{v}_{s,1}^{t-1},\mathbf{v}_{s,2}^{t-1},\cdots,\mathbf{v}_{s,|s|}^{t-1}]^{T}\mathbf{H}+\mathbf{b}\]</span></p>
+<p>其中 <span class="math inline">\(\mathbf{H}\in \mathbb{R}^{d\times
+d}\)</span> 是权重矩阵,<span class="math inline">\(\mathbb{b}\)</span>
+是偏置。<span
+class="math inline">\([\mathbf{v}_{s,1}^{t-1},\mathbf{v}_{s,2}^{t-1},\cdots,\mathbf{v}_{s,|s|}^{t-1}]\)</span>
+是第（t-1）次迭代时，节点 <span class="math inline">\(v_{s,i}\)</span>
+的intra-session-based 邻居节点 <span
+class="math inline">\(v_{i,1},v_{i,2},\cdots,v_{i,|s|}\)</span>
+的隐表示列表。连接矩阵 <span
+class="math inline">\(\mathbf{M}^s=[\mathbf{M}^{s,I},\mathbf{M}^{s,O}]\in
+\mathbb{R}^{|s|\times 2|s|}\)</span> 为 <span
+class="math inline">\(\mathbf{M}^{s,I},\mathbf{M}^{s,O}\)</span>
+的拼接。<span class="math inline">\(\mathbf{M}_{i,:}^s\)</span> 表示
+<span class="math inline">\(\mathbf{M}^s\)</span> 的第i行。矩阵 <span
+class="math inline">\(\mathbf{M}^{s,I},\mathbf{M}^{s,O}\)</span>
+表示session s 中 两个 item 节点的连接性，计算方式如下: <span
+class="math display">\[\mathbf{M}_{i,j}^{s,I}=\frac{|e_{i,j}^I|}{|D^I(v_i)|}\
+\ \ \ \ \ \mathbf{M}_{i,j}^{s,O}=\frac{|e_{i,j}^O|}{|D^O(v_i)|}\]</span>
+其中,<span class="math inline">\(e_{i,j}^I\)</span> 表示从 <span
+class="math inline">\(v_i\)</span> 连接到 <span
+class="math inline">\(v_j\)</span> 的超边集合。<span
+class="math inline">\(D^I(v_i),D^O(v_i)\)</span>分别表示 <span
+class="math inline">\(v_i\)</span> 的入度和出度。</p>
+<p><img src="figure3.png" /></p>
+<p><span class="math display">\[ \footnotesize
+图3：基于会话s和相应连接矩阵M_{i}^s的有向子图示例 \]</span>
+  迭代更新过程如下: <span
+class="math display">\[\mathbf{z}_{s,i}^t=\sigma(\mathbf{W}_{\mathcal{z}}\texttt{a}_{s,i}^t+\mathbf{U}_{\mathcal{z}}\mathbf{v}_{s,i}^{t-1})\]</span>
+<span
+class="math display">\[\mathbf{r}_{s,i}^t=\sigma(\mathbf{W}_{\mathcal{r}}\texttt{a}_{s,i}^t+\mathbf{U}_{\mathcal{r}}\mathbf{v}_{s,i}^{t-1})\]</span>
+<span
+class="math display">\[\tilde{\mathbf{v}}_{s,i}^t=tanh(\mathbf{W}_{\mathcal{o}}\texttt{a}_{s,i}^t+\mathbf{U}_{\mathcal{o}}(\mathbf{r}_{s,i}^t\odot\mathbf{v}_{s,i}^{t-1}))\]</span>
+<span
+class="math display">\[\mathbf{v}_{s,i}^t=(1-\mathbf{z}_{s,i}^t)\odot\mathbf{v}_{s,i}^{t-1}+\mathbf{z}_{s,i}^t\odot\tilde{\mathbf{v}}_{s,i}^t\]</span>
+<span class="math inline">\(\mathbf{r}_{s,i}^t\)</span>
+是重置门矢量，<span
+class="math inline">\(\tilde{\mathbf{v}}_{s,i}^t\)</span>
+是更新门矢量。<span
+class="math inline">\(\mathbf{W}_{\mathcal{z}}\)</span>,<span
+class="math inline">\(\mathbf{W}_{\mathcal{r}}\)</span>,<span
+class="math inline">\(\mathbf{W}_{\mathcal{o}}\in\mathbb{R}^{2d\times
+d}\)</span> 和 <span
+class="math inline">\(\mathbf{U}_{\mathcal{z}}\)</span>,<span
+class="math inline">\(\mathbf{U}_{\mathcal{r}}\)</span>,<span
+class="math inline">\(\mathbf{U}_{\mathcal{o}}\)</span>是可学习权重矩阵。<span
+class="math inline">\(\sigma\)</span> 为sigmoid 激活函数。<span
+class="math inline">\(\odot\)</span> 为元素乘法。<br />
+  <strong>session aggregation</strong> 聚合user <span
+class="math inline">\(u_i\)</span> 的历史和当前session 信息。 <span
+class="math display">\[Aggre^u(\mathbf
+u_i)=\mathbf{A}_{i}^{U}\left[\mathbf{v}_{i, 1}, \mathbf{v}_{i, 2},
+\ldots, \mathbf{v}_{i,|{N_{u_i}}|}\right]^{T}\]</span> <span
+class="math inline">\(N_{u_i}\)</span> 为user <span
+class="math inline">\(u_i\)</span> 历史和当前session 中的所有 item
+节点集合。<span class="math inline">\(\mathbf{A}_{i}^{U}\)</span>
+计算方式如下： <span class="math display">\[\mathbf{A}_{i,
+j}^{U}=\frac{\left\|\mathcal{V}_{i,
+j}^{e_{u}}\right\|_{2}}{\left\|\mathcal{V}_{i, j}\right\|_{2}}\]</span>
+<span class="math inline">\(\mathcal{V}_{i,
+j}^{e_{u}}=\{v_j|(v_i,v_j,u)\in e_u\}\)</span> 表示与用户 <span
+class="math inline">\(u\)</span> 和item <span
+class="math inline">\(v_i\)</span> 相连的 item 的数量。node <span
+class="math inline">\(u_i\)</span> 的最终表达为 <span
+class="math display">\[ \mathbf{u}_i^{Final}=\sigma(\mathbf{W}\cdot
+[Aggre^u(\mathbf{u}_i),\mathbf{u}_i])\]</span><br />
+### <strong>Graph learning in hypergraph</strong>   给定一个user <span
+class="math inline">\(u_i\)</span> 的会话上下文 <span
+class="math inline">\(C=\{v_{c,1},v_{c,2},\cdots,v_{c,|C|}\}\)</span>,其表示
+<span class="math inline">\(\mathbf{C}\)</span> 计算方式如下： <span
+class="math display">\[\mathbf{C}_0=\mathbf{u}^{Final}\]</span> <span
+class="math display">\[\mathbf{C}_t^*=LSTM(\mathbf{C}_{t-1})\]</span>
+将user <span class="math inline">\(\mathbf{u}\)</span>
+的隐表示作为初始向量 <span
+class="math inline">\(\mathbf{C}_0\)</span>,然后使用LSTM迭代更新它。<span
+class="math inline">\(\mathbf{C}_t^*\in \mathbb{R}^d\)</span> 表示 query
+vector，用于计算对于item node <span
+class="math inline">\(v_{c,i}\)</span> 的attention vector <span
+class="math inline">\(e_{c,i,t}\)</span>。 <span
+class="math display">\[e_{c,i,t}=f(\mathbf{v}_{c,i},\mathbf{C}_t^*)\]</span>
+<span
+class="math display">\[a_{c,i,t}=\frac{exp(e_{c,i,t})}{\sum_{c,j}exp(e_{c,j,t})}\]</span>
+  item node <span class="math inline">\(v_{c,i}\)</span> 的 attention
+vector <span class="math inline">\(e_{c,i,t}\)</span> 由 query vector
+<span class="math inline">\(\mathbf{C}_t^*\)</span> 和 item node
+的隐表示 <span class="math inline">\(\mathbf v_{c,i}\)</span>
+共同决定，<span class="math inline">\(f\)</span> 是attention
+function。然后计算注意力概率得分 <span
+class="math inline">\(a_{c,i,t}\)</span> <span
+class="math display">\[r_t=\sum_{c,i}a_{c,i,t}\mathbf{v}_i\]</span>
+<span
+class="math display">\[\mathbf{C}_t=Contact[\mathbf{C}_t^*,r_t]\]</span>
+最后输出 <span class="math inline">\(\mathbf{C}_t\)</span> 作为user
+session contex 隐表示用于下一item推荐。<br />
+### <strong>Prediction and optimization</strong> <span
+class="math display">\[\hat y_i=softmax((\mathbf
+v_i)^T\mathbf{C})\]</span> <span
+class="math display">\[Loss=-\sum_{i=1}^my_ilog(\hat
+y_i)+(1-y_i)log(1-\hat y_i)\]</span><br />
+## Experiment setup</p>
+<p><span class="math display">\[ \footnotesize
+表1：实验数据集统计表\]</span> <img src="table1.png" /></p>
+<p><span class="math display">\[ \footnotesize
+表2：实验结果对比表\]</span> <img src="table2.png" /></p>
 
       
     </div>
