@@ -181,7 +181,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-05-01 13:28:19 / Modified: 22:39:23" itemprop="dateCreated datePublished" datetime="2022-05-01T13:28:19+08:00">2022-05-01</time>
+              <time title="Created: 2022-05-01 13:28:19 / Modified: 22:42:13" itemprop="dateCreated datePublished" datetime="2022-05-01T13:28:19+08:00">2022-05-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -493,9 +493,11 @@ class="math inline">\(u\)</span> 和item <span
 class="math inline">\(v_i\)</span> 相连的 item 的数量。node <span
 class="math inline">\(u_i\)</span> 的最终表达为 <span
 class="math display">\[ \mathbf{u}_i^{Final}=\sigma(\mathbf{W}\cdot
-[Aggre^u(\mathbf{u}_i),\mathbf{u}_i])\]</span><br />
-### <strong>Graph learning in hypergraph</strong>   给定一个user <span
-class="math inline">\(u_i\)</span> 的会话上下文 <span
+[Aggre^u(\mathbf{u}_i),\mathbf{u}_i])\]</span></p>
+<h3 id="graph-learning-in-hypergraph"><strong>Graph learning in
+hypergraph</strong></h3>
+<p>  给定一个user <span class="math inline">\(u_i\)</span> 的会话上下文
+<span
 class="math inline">\(C=\{v_{c,1},v_{c,2},\cdots,v_{c,|C|}\}\)</span>,其表示
 <span class="math inline">\(\mathbf{C}\)</span> 计算方式如下： <span
 class="math display">\[\mathbf{C}_0=\mathbf{u}^{Final}\]</span> <span
@@ -521,9 +523,10 @@ class="math display">\[r_t=\sum_{c,i}a_{c,i,t}\mathbf{v}_i\]</span>
 <span
 class="math display">\[\mathbf{C}_t=Contact[\mathbf{C}_t^*,r_t]\]</span>
 最后输出 <span class="math inline">\(\mathbf{C}_t\)</span> 作为user
-session contex 隐表示用于下一item推荐。<br />
-### <strong>Prediction and optimization</strong> <span
-class="math display">\[\hat y_i=softmax((\mathbf
+session contex 隐表示用于下一item推荐。</p>
+<h3 id="prediction-and-optimization"><strong>Prediction and
+optimization</strong></h3>
+<p><span class="math display">\[\hat y_i=softmax((\mathbf
 v_i)^T\mathbf{C})\]</span> <span
 class="math display">\[Loss=-\sum_{i=1}^my_ilog(\hat
 y_i)+(1-y_i)log(1-\hat y_i)\]</span></p>
