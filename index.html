@@ -156,6 +156,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/01/Exploiting-intra-and-inter-session-dependencies-for-session-based-recommendations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="yogattt">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello World">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/01/Exploiting-intra-and-inter-session-dependencies-for-session-based-recommendations/" class="post-title-link" itemprop="url">Exploiting intra- and inter-session dependencies for session-based recommendations</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-01 13:28:19 / Modified: 16:46:57" itemprop="dateCreated datePublished" datetime="2022-05-01T13:28:19+08:00">2022-05-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="abstract">Abstract</h2>
+<p>  目前大多数回话推荐通常仅根据回话内的依赖关系做预测，忽略了复杂的会话间关系和其它可获得的边信息（item属性，users）,限制了推荐系统的准确性。为了从会话信息和边信息中有效提取会话间和会话内的依赖，进一步提升下一个item预测的准确性，作者提出了一个新的超图学习框架。该框架包含三个模块：
+- 超图构造模块（hypergraph construction
+module），构造一个超图，以统一的方式将用户、项目和项目属性连接在一起。 -
+超图学习模块（hypergraph learning
+module），通过提取构建超图中嵌入的会话内和会话间依赖项，学习每个 item 和
+user 的信息潜在表示。 - 下一个item预测模块（next-item predection
+module)。讲学习到的表示送入预测模块用于推荐。</p>
+<h2 id="introduction">Introduction</h2>
+<p>  two challenges : - ch1:
+如何有效地充分利用可用的附带信息，包括项目属性信息和用户信息，以提高下一个项目建议的准确性？
+- ch2:
+如何有效地提取会话内和会话间的依赖关系，以进一步改进下一个项目的推荐？
+针对ch1,作者同时引入item属性信息和user信息，以丰富下一个项目推荐的信息。为了有效地整合此类边信息，作者构建了一个超图，通过将基于会话的item-tiem图、item-item
+attribute value
+图和user-session图集成到统一的超图中，将项目、项目属性值和用户连接在一起。<br />
+针对ch2，对于会话内的依赖关系，作者将构建在每个会话上的每个子图转换为门控图神经网络，以了解会话内项目之间的依赖关系。对于会话间的依赖关系，作者设计了三种类型的聚合操作(user
+aggregation,item aggregation,attribute
+aggregation)，以了解会话间的依赖性，以吸收其他会话的信息，从而有利于当前会话的下一个item推荐。每个聚合都基于超图中的一种超边。<br />
+除此之外，作者还使用了session
+agregation学习用户的偏好。具体来说，session
+aggregation聚合用户的所有历史会话，以代表她/他的偏好.</p>
+<p><img src="figure1.png" /></p>
+<center>
+图1：基于user-item信息和item-attribute信息构建的超图示例。
+</center>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/16/testpage/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -661,7 +754,7 @@ prediction） <span class="math inline">\(\it g_{ap}\)</span>
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-16 10:55:47" itemprop="dateModified" datetime="2022-01-16T10:55:47+08:00">2022-01-16</time>
+                <time title="Modified: 2022-03-03 17:33:11" itemprop="dateModified" datetime="2022-03-03T17:33:11+08:00">2022-03-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -688,6 +781,26 @@ prediction） <span class="math inline">\(\it g_{ap}\)</span>
 <p>  我们通常将由实体和关系组成的知识图谱嵌入到连续的向量空间。TransE就是一种有效的方法。但是对于一些复杂关系的映射属性，如自反性、一对多、多对一和多对多，TransE并不能很好地处理这些属性。一些复杂的模型能够保留这些映射属性，但会在此过程中牺牲效率。
 因此作者提出TransH，它将关系建模为超平面,并在其上进行平移操作。该方法能够以与transE几乎相同的复杂性,保留上述的关系映射属性。此外，由于实际知识图谱往往非常不完整，因此如何在训练中构建负例以降低错误负标签是非常重要的。
 利用一对多/多对一关系映射属性，作者提出一个简单的技巧来减少错误负标签的可能性。作者在WordNet和Freebase等基准数据集上进行了大量的链接预测、三元组分类和知识抽取实验。实验表明，TransH在预测精度方面比TransE有显著的改进，并且具有可比的扩展能力。</p>
+<h2 id="introduction">introduction</h2>
+<p>  知识图谱（如Freebase <em>Bollacker et at. 2008</em>,WordNet
+<em>Miler 1995</em> 和 GeneOntology <em>Ashburner et at.
+2000</em>)已经成为了非常重要的资源以支持人工智能相关的应用，如网页/移动检索，Q&amp;A等等。一个知识图谱是一个多关系图,它由实体作为的节点和关系作为的不同类型的边组成。边的一个实例是事实的三元组（head
+entity,relation,tail entity）(表示为(<span
+class="math inline">\(h,r,t\)</span>)。在过去十年，有很多显著的成绩建立在大尺度的知识图谱上，但是支持计算的一般范式仍不明朗。两个主要的困难是：（1）知识图谱是一个符号逻辑系统而应用经常包括在连续空间的数字计算。(2)很难在一个图上聚合全局知识。形式逻辑推理的传统方法在处理真实大规模知识图谱上的长距离推理时，既不易理解也不可靠。一种方法是通过将一个知识图谱嵌入到连续的向量空间中同时保留原始图的某些属性，来解决这个问题<em>(Socher
+et al. 2013; Bordes et al. 2013a; Weston et al. 2013; Bordes et al.
+2011; 2013b; 2012; Chang, Yih, and Meek
+2013)</em>。例如，每一个实体<span class="math inline">\(h\)</span>(or
+<span class="math inline">\(t\)</span>)在向量空间中被表示为一个点<span
+class="math inline">\(\textbf h\)</span>（or <span
+class="math inline">\(\textbf t\)</span>）。而每一个关系<span
+class="math inline">\(r\)</span>被建模为向量空间中以向量<span
+class="math inline">\(\textbf
+r\)</span>为特征的操作，例如平移，投影等等。实体和关系的表示是通过最小化一个包含所有实体和关系的全局损失函数得到的。因此，即使是单个实体/关系的嵌入表示，也会从整个知识图中对全局信息进行编码。然后，这些嵌入表示可以用来服务各种应用。一个直接的应用就是在知识图谱中计算缺失的边。对于任何候选三元组（<span
+class="math inline">\(h,r,t\)</span>）我们可以简单通过检查表示<span
+class="math inline">\(\textbf h\)</span>和<span
+class="math inline">\(\textbf t\)</span>在以<span
+class="math inline">\(\textbf
+r\)</span>为特征操作下的兼容性来确认正确性。   </p>
 
       
     </div>
@@ -808,7 +921,7 @@ class="math inline">\(\underbrace{a+b+c+...+z}_{26个字母}\)</span>
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-16 10:55:47" itemprop="dateModified" datetime="2022-01-16T10:55:47+08:00">2022-01-16</time>
+                <time title="Modified: 2022-03-03 17:28:21" itemprop="dateModified" datetime="2022-03-03T17:28:21+08:00">2022-03-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -938,7 +1051,7 @@ d};b^{S,(1)},b^{S,(2)}\in\mathbb{R}^d\)</span></p>
 <h3 id="combination"><strong>Combination</strong></h3>
 <p>  该部分将为session s选择好的proxy <span
 class="math inline">\(p^{(s)}\)</span>和其短期兴趣<span
-class="math inline">\(s^(s)\)</span>结合到一起，获得会话s的最终表示，然后再用该表示计算该session和目标item
+class="math inline">\(s^{(s)}\)</span>结合到一起，获得会话s的最终表示，然后再用该表示计算该session和目标item
 i之间相异性得分。然而，根据一些先例研究，简单的加法不能模拟比一对一关系更复杂的三元组内的关系。</p>
 <ul>
 <li>情景1：如果同一个item与两个不同和短期兴趣、同一个selected
@@ -1508,7 +1621,7 @@ same (c) positive sample and (d) negative sample
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1521,7 +1634,7 @@ same (c) positive sample and (d) negative sample
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

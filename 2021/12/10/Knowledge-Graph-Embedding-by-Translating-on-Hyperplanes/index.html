@@ -29,7 +29,7 @@
 <meta property="og:description" content="abstract   我们通常将由实体和关系组成的知识图谱嵌入到连续的向量空间。TransE就是一种有效的方法。但是对于一些复杂关系的映射属性，如自反性、一对多、多对一和多对多，TransE并不能很好地处理这些属性。一些复杂的模型能够保留这些映射属性，但会在此过程中牺牲效率。 因此作者提出TransH，它将关系建模为超平面,并在其上进行平移操作。该方法能够以与transE几乎相同的复杂性,保留上述">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-12-10T08:12:08.000Z">
-<meta property="article:modified_time" content="2022-01-16T02:55:47.360Z">
+<meta property="article:modified_time" content="2022-03-03T09:33:11.098Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="2014">
 <meta property="article:tag" content="AAAI">
@@ -194,7 +194,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-16 10:55:47" itemprop="dateModified" datetime="2022-01-16T10:55:47+08:00">2022-01-16</time>
+                <time title="Modified: 2022-03-03 17:33:11" itemprop="dateModified" datetime="2022-03-03T17:33:11+08:00">2022-03-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -221,6 +221,26 @@
 <p>  我们通常将由实体和关系组成的知识图谱嵌入到连续的向量空间。TransE就是一种有效的方法。但是对于一些复杂关系的映射属性，如自反性、一对多、多对一和多对多，TransE并不能很好地处理这些属性。一些复杂的模型能够保留这些映射属性，但会在此过程中牺牲效率。
 因此作者提出TransH，它将关系建模为超平面,并在其上进行平移操作。该方法能够以与transE几乎相同的复杂性,保留上述的关系映射属性。此外，由于实际知识图谱往往非常不完整，因此如何在训练中构建负例以降低错误负标签是非常重要的。
 利用一对多/多对一关系映射属性，作者提出一个简单的技巧来减少错误负标签的可能性。作者在WordNet和Freebase等基准数据集上进行了大量的链接预测、三元组分类和知识抽取实验。实验表明，TransH在预测精度方面比TransE有显著的改进，并且具有可比的扩展能力。</p>
+<h2 id="introduction">introduction</h2>
+<p>  知识图谱（如Freebase <em>Bollacker et at. 2008</em>,WordNet
+<em>Miler 1995</em> 和 GeneOntology <em>Ashburner et at.
+2000</em>)已经成为了非常重要的资源以支持人工智能相关的应用，如网页/移动检索，Q&amp;A等等。一个知识图谱是一个多关系图,它由实体作为的节点和关系作为的不同类型的边组成。边的一个实例是事实的三元组（head
+entity,relation,tail entity）(表示为(<span
+class="math inline">\(h,r,t\)</span>)。在过去十年，有很多显著的成绩建立在大尺度的知识图谱上，但是支持计算的一般范式仍不明朗。两个主要的困难是：（1）知识图谱是一个符号逻辑系统而应用经常包括在连续空间的数字计算。(2)很难在一个图上聚合全局知识。形式逻辑推理的传统方法在处理真实大规模知识图谱上的长距离推理时，既不易理解也不可靠。一种方法是通过将一个知识图谱嵌入到连续的向量空间中同时保留原始图的某些属性，来解决这个问题<em>(Socher
+et al. 2013; Bordes et al. 2013a; Weston et al. 2013; Bordes et al.
+2011; 2013b; 2012; Chang, Yih, and Meek
+2013)</em>。例如，每一个实体<span class="math inline">\(h\)</span>(or
+<span class="math inline">\(t\)</span>)在向量空间中被表示为一个点<span
+class="math inline">\(\textbf h\)</span>（or <span
+class="math inline">\(\textbf t\)</span>）。而每一个关系<span
+class="math inline">\(r\)</span>被建模为向量空间中以向量<span
+class="math inline">\(\textbf
+r\)</span>为特征的操作，例如平移，投影等等。实体和关系的表示是通过最小化一个包含所有实体和关系的全局损失函数得到的。因此，即使是单个实体/关系的嵌入表示，也会从整个知识图中对全局信息进行编码。然后，这些嵌入表示可以用来服务各种应用。一个直接的应用就是在知识图谱中计算缺失的边。对于任何候选三元组（<span
+class="math inline">\(h,r,t\)</span>）我们可以简单通过检查表示<span
+class="math inline">\(\textbf h\)</span>和<span
+class="math inline">\(\textbf t\)</span>在以<span
+class="math inline">\(\textbf
+r\)</span>为特征操作下的兼容性来确认正确性。   </p>
 
     </div>
 
@@ -306,7 +326,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.</span> <span class="nav-text">abstract</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.</span> <span class="nav-text">abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">2.</span> <span class="nav-text">introduction</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -322,7 +342,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -335,7 +355,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
