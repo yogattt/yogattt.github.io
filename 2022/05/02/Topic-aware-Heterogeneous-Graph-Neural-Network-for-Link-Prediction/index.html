@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://example.com/2022/05/02/Topic-aware-Heterogeneous-Graph-Neural-Network-for-Link-Prediction/table1.png">
 <meta property="og:image" content="http://example.com/2022/05/02/Topic-aware-Heterogeneous-Graph-Neural-Network-for-Link-Prediction/table2.png">
 <meta property="article:published_time" content="2022-05-02T05:07:58.000Z">
-<meta property="article:modified_time" content="2022-05-04T08:51:29.446Z">
+<meta property="article:modified_time" content="2022-05-04T08:56:04.634Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="2021">
 <meta property="article:tag" content="CIKM">
@@ -200,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-04 16:51:29" itemprop="dateModified" datetime="2022-05-04T16:51:29+08:00">2022-05-04</time>
+                <time title="Modified: 2022-05-04 16:56:04" itemprop="dateModified" datetime="2022-05-04T16:56:04+08:00">2022-05-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -251,8 +251,9 @@ THGNN,
 Heterogeneous Graph Neural Network
 THGNN），旨在进一步挖掘基于多方面主题感知表示学习的结构语义的细粒度主题感知语义。更准确地说，THGNN
 应用多面变换矩阵将不同类型节点的特征投影到多个主题感知子空间中。对于前两个挑战，THGNN
-应用交替的两步聚合机制，包括元路径内分解和元路径间合并，以便为每个目标节点学习多方面主题感知嵌入。具体来说，元路径内分解步骤的主要目标是推断基于元路径的上下文的主题感知分布，并根据分布聚合上下文信息以形成多方面表示，从而捕获细粒度的主题感知语义。另一方面，元路径间合并步骤采用多方面注意机制来融合不同的元路径以进行最终的多方面嵌入，从而为链接预测保留结构和主题感知语义。对于最后一个挑战，我们引入了另一个名为主题先验指导的模块，它利用主题建模从非结构化文本内容中获取全局统计知识，并帮助指导上下文聚合。通过这种方式，它作为一个正则化器来鼓励推理主题感知子空间更加正交，并提高学习的多方面主题感知表示的可解释性。<br />
-## DEFINITIONS   <strong>Heterogeneous Graph</strong>:
+应用交替的两步聚合机制，包括元路径内分解和元路径间合并，以便为每个目标节点学习多方面主题感知嵌入。具体来说，元路径内分解步骤的主要目标是推断基于元路径的上下文的主题感知分布，并根据分布聚合上下文信息以形成多方面表示，从而捕获细粒度的主题感知语义。另一方面，元路径间合并步骤采用多方面注意机制来融合不同的元路径以进行最终的多方面嵌入，从而为链接预测保留结构和主题感知语义。对于最后一个挑战，我们引入了另一个名为主题先验指导的模块，它利用主题建模从非结构化文本内容中获取全局统计知识，并帮助指导上下文聚合。通过这种方式，它作为一个正则化器来鼓励推理主题感知子空间更加正交，并提高学习的多方面主题感知表示的可解释性。</p>
+<h2 id="definitions">DEFINITIONS</h2>
+<p>  <strong>Heterogeneous Graph</strong>:
 异构图定义为具有对象类型映射函数<span
 class="math inline">\(\varphi:\mathcal{V}\rightarrow\mathcal{A}\)</span>和链路类型映射函数<span
 class="math inline">\(\psi:\mathcal{E}\rightarrow\mathcal{R}\)</span>的图<span
@@ -264,9 +265,9 @@ class="math inline">\(\mathcal{|A| + |R| &gt; 2}\)</span>。<br />
 class="math inline">\(A_{1} \stackrel{R_{1}}{\longrightarrow} A_{2}
 \stackrel{R_{2}}{\longrightarrow} \ldots
 \stackrel{R_{l}}{\longrightarrow} A_{l+1}\)</span>
-的路径格式。它定义了对象<span class="math inline">\(A_1\)</span>,<span
-class="math inline">\(A_{l+1}\)</span>之间的复合关系$R=R_1 R_2 R_l <span
-class="math inline">\(。其中\)</span><span
+的路径格式。它定义了对象<span
+class="math inline">\(A_1,A_{l+1}\)</span>之间的复合关系$R=R_1 R_2 R_l
+<span class="math inline">\(。其中\)</span><span
 class="math inline">\(表示关系上的组合运算符。
 &amp;emsp;&amp;emsp;**Metapath
 Instance**:给定异构图的元路径\)</span>M<span
@@ -563,9 +564,9 @@ src="figure4.png" /></p>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.</span> <span class="nav-text">ABSTRACT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-facet-projection"><span class="nav-number">1.1.</span> <span class="nav-text">Multi-facet
-Projection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-facet-heterogeneous-graph-neural-network"><span class="nav-number">1.2.</span> <span class="nav-text">Multi-facet
-Heterogeneous Graph Neural Network</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiments"><span class="nav-number">2.</span> <span class="nav-text">EXPERIMENTS</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.</span> <span class="nav-text">ABSTRACT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#definitions"><span class="nav-number">2.</span> <span class="nav-text">DEFINITIONS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-facet-projection"><span class="nav-number">2.1.</span> <span class="nav-text">Multi-facet
+Projection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-facet-heterogeneous-graph-neural-network"><span class="nav-number">2.2.</span> <span class="nav-text">Multi-facet
+Heterogeneous Graph Neural Network</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiments"><span class="nav-number">3.</span> <span class="nav-text">EXPERIMENTS</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
