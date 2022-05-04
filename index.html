@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-04 16:56:04" itemprop="dateModified" datetime="2022-05-04T16:56:04+08:00">2022-05-04</time>
+                <time title="Modified: 2022-05-04 16:59:00" itemprop="dateModified" datetime="2022-05-04T16:59:00+08:00">2022-05-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,30 +253,31 @@ class="math inline">\(A_{1} \stackrel{R_{1}}{\longrightarrow} A_{2}
 \stackrel{R_{2}}{\longrightarrow} \ldots
 \stackrel{R_{l}}{\longrightarrow} A_{l+1}\)</span>
 的路径格式。它定义了对象<span
-class="math inline">\(A_1,A_{l+1}\)</span>之间的复合关系$R=R_1 R_2 R_l
-<span class="math inline">\(。其中\)</span><span
-class="math inline">\(表示关系上的组合运算符。
-&amp;emsp;&amp;emsp;**Metapath
-Instance**:给定异构图的元路径\)</span>M<span
-class="math inline">\(，\)</span>M<span
-class="math inline">\(的元路径实例\)</span>m<span
-class="math inline">\(被定义为图中与\)</span>M<span
-class="math inline">\(中的类型序列匹配的节点序列。连接节点\)</span>u<span
-class="math inline">\(和\)</span>v<span
-class="math inline">\(的元路径实例，其中节点\)</span>u<span
-class="math inline">\(是目标节点，表示为\)</span>m_u<span
-class="math inline">\(。 &amp;emsp;&amp;emsp;**Metapath-based
-Context**:给定一个元路径实例\)</span>m_u<span
-class="math inline">\(，目标节点\)</span>u<span
-class="math inline">\(基于元路径的上下文\)</span>c<span
-class="math inline">\(定义为实例中不包含节点\)</span>u<span
-class="math inline">\(的其它节点序列，表示为\)</span>c_u =m_u{u}<span
-class="math inline">\(，其中存在节点包含文本内容。更具体地说，具有目标节点\)</span>u$的基于元路径
-<span class="math inline">\(M\)</span> 的上下文集合表示为<span
+class="math inline">\(A_1,A_{l+1}\)</span>之间的复合关系 $ R=R_1 R_2 R_l
+$ 。其中<span
+class="math inline">\(\circ\)</span>表示关系上的组合运算符。<br />
+  <strong>Metapath Instance</strong>:给定异构图的元路径<span
+class="math inline">\(M\)</span>，<span
+class="math inline">\(M\)</span>的元路径实例<span
+class="math inline">\(m\)</span>被定义为图中与<span
+class="math inline">\(M\)</span>中的类型序列匹配的节点序列。连接节点<span
+class="math inline">\(u\)</span>和<span
+class="math inline">\(v\)</span>的元路径实例，其中节点<span
+class="math inline">\(u\)</span>是目标节点，表示为<span
+class="math inline">\(m_u\)</span>。<br />
+  <strong>Metapath-based Context</strong>:给定一个元路径实例<span
+class="math inline">\(m_u\)</span>，目标节点<span
+class="math inline">\(u\)</span>基于元路径的上下文<span
+class="math inline">\(c\)</span>定义为实例中不包含节点<span
+class="math inline">\(u\)</span>的其它节点序列，表示为<span
+class="math inline">\(c_u
+=m_u\setminus\{u\}\)</span>，其中存在节点包含文本内容。更具体地说，具有目标节点<span
+class="math inline">\(u\)</span>的基于元路径 <span
+class="math inline">\(M\)</span> 的上下文集合表示为 <span
 class="math inline">\(C_u^M\)</span>。<span
 class="math inline">\(c\)</span>中与文本相关的节点序列表示为<span
-class="math inline">\(𝑐_u^{text}\)</span><br />
-## METHODOLOGY</p>
+class="math inline">\(𝑐_u^{text}\)</span></p>
+<h2 id="methodology">METHODOLOGY</h2>
 <p><img src="figure2.png" /></p>
 <center>
 图 2: 模型THGNN的总体框架。
