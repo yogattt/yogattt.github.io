@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://example.com/2022/05/04/Graph-Enhanced-Multi-Task-Learning-of-Multi-Level-Transition-Dynamics-for-Session-based-Recommendation/table3.png">
 <meta property="og:image" content="http://example.com/2022/05/04/Graph-Enhanced-Multi-Task-Learning-of-Multi-Level-Transition-Dynamics-for-Session-based-Recommendation/figure4.png">
 <meta property="article:published_time" content="2022-05-04T09:14:04.000Z">
-<meta property="article:modified_time" content="2022-05-04T09:58:07.359Z">
+<meta property="article:modified_time" content="2022-05-04T09:59:18.727Z">
 <meta property="article:author" content="yogattt">
 <meta property="article:tag" content="session-based">
 <meta property="article:tag" content="AAAI">
@@ -194,7 +194,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-05-04 17:14:04 / Modified: 17:58:07" itemprop="dateCreated datePublished" datetime="2022-05-04T17:14:04+08:00">2022-05-04</time>
+              <time title="Created: 2022-05-04 17:14:04 / Modified: 17:59:18" itemprop="dateCreated datePublished" datetime="2022-05-04T17:14:04+08:00">2022-05-04</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -298,7 +298,9 @@ from different sessions</li>
 <li>a fused graph-level embedding with the aggregation function <span
 class="math inline">\(\mathbf Z=\tau(\mathbf H),\tau\)</span>是average
 pooling</li>
-<li>a classifier <span class="math display">\[\xi\left(\mathbf{h}_{m},
+<li>a
+classifier,判断节点是不是该图中的节点，负样例通过随机打乱节点一定比例的特征产生。
+<span class="math display">\[\xi\left(\mathbf{h}_{m},
 \mathbf{z}\right)=\sigma\left(\mathbf{h}_{m}^{T} \cdot \mathbf{W}_{g}
 \cdot \mathbf{z}\right) ; \mathbb{R}^{d} \times \mathbb{R}^{d}
 \rightarrow \mathbb{R}^{2} \]</span></li>
